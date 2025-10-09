@@ -29,8 +29,8 @@ Outputs
 import inspect
 import os
 import shutil
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 from _helpers import BASE_DIR, configure_logging, create_logger, read_osm_config
 from earth_osm import eo
@@ -110,17 +110,23 @@ if __name__ == "__main__":
     # Check for historical date configuration
     historical_config = snakemake.config.get("historical_data", {})
     target_date = historical_config.get("osm_date", None)
-    
+
     # Parse target_date if provided as string
     if target_date and isinstance(target_date, str):
         try:
             target_date = datetime.strptime(target_date, "%Y-%m-%d")
-            logger.info(f"Using historical OSM data for date: {target_date.strftime('%Y-%m-%d')}")
+            logger.info(
+                f"Using historical OSM data for date: {target_date.strftime('%Y-%m-%d')}"
+            )
         except ValueError:
-            logger.warning(f"Invalid date format '{target_date}', expected YYYY-MM-DD. Using latest data.")
+            logger.warning(
+                f"Invalid date format '{target_date}', expected YYYY-MM-DD. Using latest data."
+            )
             target_date = None
     elif target_date:
-        logger.info(f"Using historical OSM data for date: {target_date.strftime('%Y-%m-%d')}")
+        logger.info(
+            f"Using historical OSM data for date: {target_date.strftime('%Y-%m-%d')}"
+        )
 
     # allow for custom data usage
     if custom_data:
@@ -143,13 +149,18 @@ if __name__ == "__main__":
             "out_aggregate": True,
             "progress_bar": snakemake.config["enable"]["progress_bar"],
         }
-        
+
         # Add historical date support if available and target_date is provided
-        if target_date and 'target_date' in inspect.signature(eo.save_osm_data).parameters:
+        if (
+            target_date
+            and "target_date" in inspect.signature(eo.save_osm_data).parameters
+        ):
             save_args["target_date"] = target_date
             logger.info("Historical data download enabled")
         elif target_date:
-            logger.warning("Historical date requested but earth-osm version doesn't support target_date parameter")
+            logger.warning(
+                "Historical date requested but earth-osm version doesn't support target_date parameter"
+            )
 
         eo.save_osm_data(**save_args)
 
