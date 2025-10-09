@@ -1,0 +1,34 @@
+# Example configuration for historical OSM data download
+# This configuration extends the base config to enable historical data retrieval
+
+# Base configuration from config.default.yaml or config.yaml should be included
+# This file shows only the additional/modified parameters for historical data
+
+# Historical data configuration
+historical_data:
+  # Set target date for OSM data download in YYYY-MM-DD format
+  # Available dates depend on OpenStreetMap historical data availability
+  # Generally available from around 2012 onwards
+  osm_date: "2020-01-01"  # Example: Download OSM data as it existed on January 1, 2020
+
+# Alternative examples for different dates:
+# osm_date: "2018-01-01"  # Early 2018 data
+# osm_date: "2022-06-15"  # Mid-2022 data
+# osm_date: "2023-12-31"  # End of 2023 data
+
+# Note: Historical data shows significant evolution over time
+# For example, power infrastructure in many regions has grown substantially:
+# - Generator counts may increase 10x or more between 2018-2025
+# - Substations and transmission lines also show major growth
+# - Consider the time period relevant to your energy system analysis
+
+# Usage:
+# 1. Copy this configuration to your project config file
+# 2. Modify the osm_date to your desired historical date
+# 3. Run the workflow as normal - the download_osm_data rule will automatically
+#    use the historical date when downloading OSM data
+# 4. All other workflow steps remain unchanged
+
+# Requirements:
+# - earth-osm version with historical data support (development branch)
+# - Set up environment.yaml to use the correct earth-osm version
