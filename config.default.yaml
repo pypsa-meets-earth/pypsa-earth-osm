@@ -522,7 +522,7 @@ custom_data:
 
 # Historical data configuration for OSM data
 # Requires earth-osm version with historical data support
-historical_data:
+historical_osm_data:
   # Set target date for OSM data download in YYYY-MM-DD format
   # Leave blank/commented out to use latest OSM data (default behavior)  
   # Available dates depend on OpenStreetMap historical data availability (generally from ~2012 onwards)
