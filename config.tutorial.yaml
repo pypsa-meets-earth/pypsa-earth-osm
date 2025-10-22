@@ -6,13 +6,13 @@ version: 0.7.0
 tutorial: true
 
 
-countries: ["BO"]
+countries: ["NG", "BJ"]
 
 enable:
   retrieve_databundle: true
   retrieve_databundle_sector: true
   build_natura_raster: true
-  progress_bar: true
+  progress_bar: false
 
 scenario:
   clusters: [6]
