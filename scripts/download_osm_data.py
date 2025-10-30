@@ -146,6 +146,8 @@ if __name__ == "__main__":
             osm_subdir = target_date.replace("-", "")[:6] + "/"  # Format: YYYYMM/
         elif isinstance(target_date, datetime):
             osm_subdir = target_date.strftime("%Y%m") + "/"
+    elif source == "custom":
+        osm_subdir = "custom/"
     else:
         osm_subdir = "latest/"
 
