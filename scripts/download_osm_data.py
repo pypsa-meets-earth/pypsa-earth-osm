@@ -127,7 +127,7 @@ if __name__ == "__main__":
 
     # Extract configuration based on source
     custom_path_config = osm_config.get("custom_path", {})
-    target_date = osm_config.get("target_date", None)
+    target_date = str(osm_config.get("target_date", None))
 
     # Handle custom_path - dict with pbf/power keys
     if isinstance(custom_path_config, dict):
