@@ -21,9 +21,12 @@ Inputs
 Outputs
 -------
 
-- ``data/osm/pbf``: Raw OpenStreetMap data as .pbf files per country
-- ``data/osm/power``: Filtered power data as .json files per country
-- ``data/osm/out``:  Prepared power data as .geojson and .csv files per country
+- ``data/osm/<date>/pbf``: Raw OpenStreetMap data as .pbf files per country
+  - ``<date>`` is formatted as YYYYMM/ for historical data or "latest/" for current data
+- ``data/osm/<date>/power``: Filtered power data as .json files per country
+  - ``<date>`` is formatted as YYYYMM/ for historical data or "latest/" for current data
+- ``data/osm/<date>/out``:  Prepared power data as .geojson and .csv files per country
+  - ``<date>`` is formatted as YYYYMM/ for historical data or "latest/" for current data
 - ``resources/osm/raw``: Prepared and per type (e.g. cable/lines) aggregated power data as .geojson and .csv files
 """
 import inspect
@@ -63,7 +66,8 @@ def country_list_to_geofk(country_list):
     full_codes_list : list
         Example ["NG","ZA"]
     """
-    full_codes_list = [convert_iso_to_geofk(c_code) for c_code in set(country_list)]
+    full_codes_list = [convert_iso_to_geofk(
+        c_code) for c_code in set(country_list)]
 
     return full_codes_list
 
@@ -107,10 +111,6 @@ if __name__ == "__main__":
 
     run = snakemake.config.get("run", {})
     RDIR = run["name"] + "/" if run.get("name") else ""
-    store_path_resources = Path.joinpath(
-        Path(BASE_DIR), "resources", RDIR, "osm", "raw"
-    )
-    store_path_data = Path.joinpath(Path(BASE_DIR), "data", "osm")
     country_list = country_list_to_geofk(snakemake.params.countries)
 
     # Get unified OSM data configuration
@@ -138,6 +138,22 @@ if __name__ == "__main__":
         custom_pbf_path = "data/custom/osm/pbf"
         custom_power_path = "data/custom/osm/power"
 
+    # Create date-specific subdirectory for OSM data if historical date is provided
+    osm_subdir = ""
+    if source == "historical" and target_date:
+        if isinstance(target_date, str):
+            # Extract YYYYMM from date string
+            osm_subdir = target_date.replace("-", "")[:6] + "/"  # Format: YYYYMM/
+        elif isinstance(target_date, datetime):
+            osm_subdir = target_date.strftime("%Y%m") + "/"
+    else:
+        osm_subdir = "latest/"
+
+    store_path_resources = Path.joinpath(
+        Path(BASE_DIR), "resources", RDIR, "osm", "raw"
+    )
+    store_path_data = Path.joinpath(Path(BASE_DIR), "data", "osm", osm_subdir)
+
     # Parse target_date if provided as string (for historical source)
     if source == "historical" and target_date:
         if isinstance(target_date, str):
@@ -146,12 +162,17 @@ if __name__ == "__main__":
                 logger.info(
                     f"Historical OSM data mode: Using data from {target_date.strftime('%Y-%m-%d')}"
                 )
+                # Update osm_subdir after parsing
+                osm_subdir = target_date.strftime("%Y%m") + "/"
+                store_path_data = Path.joinpath(Path(BASE_DIR), "data", "osm", osm_subdir)
             except ValueError:
                 logger.warning(
                     f"Invalid date format '{target_date}', expected YYYY-MM-DD. Falling back to latest data download."
                 )
                 source = "download"
                 target_date = None
+                osm_subdir = "latest/"
+                store_path_data = Path.joinpath(Path(BASE_DIR), "data", "osm", osm_subdir)
         else:
             logger.info(
                 f"Historical OSM data mode: Using data from {target_date.strftime('%Y-%m-%d')}"
@@ -161,6 +182,9 @@ if __name__ == "__main__":
             "Historical source selected but no target_date provided. Falling back to latest data download."
         )
         source = "download"
+    
+    # Log the data storage path
+    logger.info(f"OSM data will be stored in: {store_path_data}")
 
     # Process OSM data based on selected source
     if source == "custom":
@@ -274,7 +298,8 @@ if __name__ == "__main__":
     # Rename and move osm files to the resources folder output
     for name in names:
         for f in out_formats:
-            new_file_name = Path.joinpath(store_path_resources, f"all_raw_{name}s.{f}")
+            new_file_name = Path.joinpath(
+                store_path_resources, f"all_raw_{name}s.{f}")
             old_files = list(Path(out_path).glob(f"*{name}.{f}"))
             # if file is missing, create empty file, otherwise rename it an move it
             if not old_files:
