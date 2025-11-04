@@ -20,7 +20,7 @@ scenario:
 
 snapshots:
   start: "2013-01-01"
-  # end: "2013-01-08" # good for test runs  
+  # end: "2013-01-08" # good for test runs
   end: "2014-01-01"
   inclusive: "left" # end is not inclusive
 
@@ -48,7 +48,7 @@ electricity:
     Generator: []
     StorageUnit: [] # battery, H2
     Store: []
-    Link: [] # H2 pipeline  
+    Link: [] # H2 pipeline
 
 atlite:
   nprocesses: 4
