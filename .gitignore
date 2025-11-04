@@ -58,7 +58,7 @@ test/tmp/
 playground/
 
 # Specific configuration files
-configs/scenarios/config.*.yaml
+!configs/scenarios/config.*.yaml
 !configs/scenarios/config.NG.yaml
 
 # VS Code-related files
