@@ -189,6 +189,8 @@ renewable:
     extendable: true
     csp_model: advanced # simple or advanced
 
+sector:
+  chp: false
 
 solving:
   solver:
