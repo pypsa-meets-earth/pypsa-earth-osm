@@ -24,6 +24,31 @@ snapshots:
   end: "2014-01-01"
   inclusive: "left" # end is not inclusive
 
+electricity:
+  base_voltage: 380.
+  voltages: [132., 220., 300., 380., 500., 750.]
+  co2limit: 7.75e+7 # European default, 0.05 * 3.1e9*0.5, needs to be adjusted for Africa
+  co2base: 1.487e+9 # European default, adjustment to Africa necessary
+  agg_p_nom_limits: data/agg_p_nom_minmax.csv
+  hvdc_as_lines: false # should HVDC lines be modeled as `Line` or as `Link` component?
+  automatic_emission: true
+  automatic_emission_base_year: 2014 # https://climatepromise.undp.org/what-we-do/where-we-work/colombia
+
+  operational_reserve: # like https://genxproject.github.io/GenX/dev/core/#Reserves
+    activate: false
+    epsilon_load: 0.02 # share of total load
+    epsilon_vres: 0.02 # share of total renewable supply
+    contingency: 0 # fixed capacity in MW
+
+  max_hours:
+    battery: 6
+    H2: 168
+
+  extendable_carriers:
+    Generator: [solar, onwind, offwind-ac, offwind-dc, OCGT]
+    StorageUnit: [] # battery, H2
+    Store: [battery, H2]
+    Link: [] # H2 pipeline  
 
 atlite:
   nprocesses: 4
