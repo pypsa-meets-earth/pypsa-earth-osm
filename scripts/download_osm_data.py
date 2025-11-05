@@ -165,7 +165,9 @@ if __name__ == "__main__":
                 )
                 # Update osm_subdir after parsing
                 osm_subdir = target_date.strftime("%Y%m") + "/"
-                store_path_data = Path.joinpath(Path(BASE_DIR), "data", "osm", osm_subdir)
+                store_path_data = Path.joinpath(
+                    Path(BASE_DIR), "data", "osm", osm_subdir
+                )
             except ValueError:
                 logger.warning(
                     f"Invalid date format '{target_date}', expected YYYY-MM-DD. Falling back to latest data download."
@@ -173,7 +175,9 @@ if __name__ == "__main__":
                 source = "download"
                 target_date = None
                 osm_subdir = "latest/"
-                store_path_data = Path.joinpath(Path(BASE_DIR), "data", "osm", osm_subdir)
+                store_path_data = Path.joinpath(
+                    Path(BASE_DIR), "data", "osm", osm_subdir
+                )
         else:
             logger.info(
                 f"Historical OSM data mode: Using data from {target_date.strftime('%Y-%m-%d')}"
@@ -183,7 +187,7 @@ if __name__ == "__main__":
             "Historical source selected but no target_date provided. Falling back to latest data download."
         )
         source = "download"
-    
+
     # Log the data storage path
     logger.info(f"OSM data will be stored in: {store_path_data}")
 
