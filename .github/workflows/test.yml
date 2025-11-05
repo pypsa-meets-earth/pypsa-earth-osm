@@ -3,11 +3,9 @@ name: Test workflows
 on:
   push:
     branches:
-    - main
     - development
   pull_request:
     branches:
-    - main
     - development
   schedule:
   - cron: "0 5 * * TUE"
