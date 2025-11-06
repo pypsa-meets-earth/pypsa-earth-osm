@@ -6,7 +6,7 @@ version: 0.7.0
 tutorial: true
 
 
-countries: ["NG", "BJ"]
+countries: ["BJ"]
 
 enable:
   retrieve_databundle: true
@@ -63,7 +63,7 @@ renewable:
 
 # OpenStreetMap (OSM) data configuration
 osm_data:
-  source: "download" # Options: "download", "historical", or "custom"
+  source: "latest" # Options: "latest", "historical", or "custom"
   custom_path:
     pbf: "data/custom/osm/pbf"  # Path to pbf files (required if source: "custom")
     power: "data/custom/osm/power"  # Path to power files (optional)
