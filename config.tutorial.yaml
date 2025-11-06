@@ -6,7 +6,7 @@ version: 0.7.0
 tutorial: true
 
 
-countries: ["BJ"]
+countries: ["NG", "BJ"]
 
 enable:
   retrieve_databundle: true
