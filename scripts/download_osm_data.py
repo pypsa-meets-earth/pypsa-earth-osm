@@ -142,13 +142,13 @@ if __name__ == "__main__":
     if source == "historical" and target_date:
         if isinstance(target_date, str):
             # Extract YYYYMM from date string
-            osm_subdir = target_date.replace("-", "")[:6] + "/"  # Format: YYYYMM/
+            osm_subdir = target_date.replace("-", "")[:6]  # Format: YYYYMM
         elif isinstance(target_date, datetime):
-            osm_subdir = target_date.strftime("%Y%m") + "/"
+            osm_subdir = target_date.strftime("%Y%m")
     elif source == "custom":
-        osm_subdir = "custom/"
+        osm_subdir = "custom"
     else:
-        osm_subdir = "latest/"
+        osm_subdir = "latest"
 
     store_path_resources = Path.joinpath(
         Path(BASE_DIR), "resources", RDIR, "osm", "raw"
@@ -164,7 +164,7 @@ if __name__ == "__main__":
                     f"Historical OSM data mode: Using data from {target_date.strftime('%Y-%m-%d')}"
                 )
                 # Update osm_subdir after parsing
-                osm_subdir = target_date.strftime("%Y%m") + "/"
+                osm_subdir = target_date.strftime("%Y%m")
                 store_path_data = Path.joinpath(
                     Path(BASE_DIR), "data", "osm", osm_subdir
                 )
@@ -174,7 +174,7 @@ if __name__ == "__main__":
                 )
                 source = "latest"
                 target_date = None
-                osm_subdir = "latest/"
+                osm_subdir = "latest"
                 store_path_data = Path.joinpath(
                     Path(BASE_DIR), "data", "osm", osm_subdir
                 )
