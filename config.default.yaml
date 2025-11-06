@@ -531,7 +531,7 @@ custom_data:
 # OpenStreetMap (OSM) data configuration
 # Unified configuration for OSM data source and options
 osm_data:
-  source: "download" # Options: "download" (latest OSM), "historical" (specific date), or "custom" (user-provided files)
+  source: "latest" # Options: "latest" (latest OSM), "historical" (specific date), or "custom" (user-provided files)
 
   # Custom data options - used when source: "custom"
   # Custom OSM files must be placed in the specified paths

@@ -114,15 +114,15 @@ if __name__ == "__main__":
 
     # Get unified OSM data configuration
     osm_config = snakemake.config.get("osm_data", {})
-    source = osm_config.get("source", "download").lower()
+    source = osm_config.get("source", "latest").lower()
 
     # Validate source option
-    valid_sources = ["download", "historical", "custom"]
+    valid_sources = ["latest", "historical", "custom"]
     if source not in valid_sources:
         logger.warning(
-            f"Invalid osm_data source '{source}'. Must be one of {valid_sources}. Defaulting to 'download'."
+            f"Invalid osm_data source '{source}'. Must be one of {valid_sources}. Defaulting to 'latest'."
         )
-        source = "download"
+        source = "latest"
 
     # Extract configuration based on source
     custom_path_config = osm_config.get("custom_path", {})
@@ -172,7 +172,7 @@ if __name__ == "__main__":
                 logger.warning(
                     f"Invalid date format '{target_date}', expected YYYY-MM-DD. Falling back to latest data download."
                 )
-                source = "download"
+                source = "latest"
                 target_date = None
                 osm_subdir = "latest/"
                 store_path_data = Path.joinpath(
@@ -186,7 +186,7 @@ if __name__ == "__main__":
         logger.warning(
             "Historical source selected but no target_date provided. Falling back to latest data download."
         )
-        source = "download"
+        source = "latest"
 
     # Log the data storage path
     logger.info(f"OSM data will be stored in: {store_path_data}")
@@ -201,7 +201,7 @@ if __name__ == "__main__":
             raise FileNotFoundError(
                 f"Custom OSM pbf data path '{custom_pbf_path}' does not exist. "
                 f"This path is required when using source: 'custom'. "
-                f"Please provide valid pbf files or change osm_data.source to 'download'."
+                f"Please provide valid pbf files or change osm_data.source to 'latest'."
             )
 
         # Validate that required pbf files exist for the specified countries
@@ -228,7 +228,7 @@ if __name__ == "__main__":
                 f"Custom OSM data mode requires pbf files for all specified countries. "
                 f"Missing files in '{custom_pbf_path}': {', '.join(missing_files)}. "
                 f"Expected files should be named '<country>-latest.osm.pbf' (e.g., 'bolivia-latest.osm.pbf'). "
-                f"Please provide the required pbf files or change osm_data.source to 'download'."
+                f"Please provide the required pbf files or change osm_data.source to 'latest'."
             )
 
         # Create the data directories
@@ -281,7 +281,7 @@ if __name__ == "__main__":
                 f"Historical date requested but earth-osm version doesn't support target_date parameter. "
                 f"Downloading the latest OSM data instead."
             )
-    elif source == "download":
+    elif source == "latest":
         logger.info("Downloading latest OSM data")
     elif source == "custom":
         logger.info(
