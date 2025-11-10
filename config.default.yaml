@@ -182,7 +182,9 @@ electricity:
   voltages: [132., 220., 300., 380., 500., 750.]
   co2limit: 7.75e+7 # European default, 0.05 * 3.1e9*0.5, needs to be adjusted for Africa
   co2base: 1.487e+9 # European default, adjustment to Africa necessary
-  agg_p_nom_limits: data/agg_p_nom_minmax.csv
+  agg_p_nom_limits: # enables to set country-wise maximum and minimum generation capacities for generators (e.g. renewables, nuclear, and geothermal)
+    file: data/agg_p_nom_minmax.csv # path to csv file containing country-wise generation capacity limits
+    include_existing: false # false: only new built capacities are constrained; true: existing capacities are accounted in the constraints
   hvdc_as_lines: false # should HVDC lines be modeled as `Line` or as `Link` component?
   automatic_emission: false
   automatic_emission_base_year: 1990 # 1990 is taken as default. Any year from 1970 to 2018 can be selected.
@@ -525,18 +527,28 @@ custom_data:
   gas_network: false # If "True" then a custom .csv file must be placed in "resources/custom_data/pipelines.csv" , If "False" the user can choose btw "greenfield" or Model built-in datasets. Please refer to ["sector"] below.
   export_ports: false # If "True" then a custom .csv file must be placed in "data/custom/export_ports.csv"
   airports: false # If "True" then a custom .csv file must be placed in "data/custom/airports.csv". Data format for aiports must be in the format of the airports.csv file in the data folder.
-  osm_data: 
-    set: false # if "True" then custom file for osm (pbf and power files) must be placed in "data/custom/osm" folder.
-    custom_path: "" # if "True" then provide the specific absolute path of the custom folder e.g. (...\data\custom\osm)
 
-# Historical data configuration for OSM data
-# Requires earth-osm version with historical data support
-historical_osm_data:
+# OpenStreetMap (OSM) data configuration
+# Unified configuration for OSM data source and options
+osm_data:
+  source: "latest" # Options: "latest" (latest OSM), "historical" (specific date), or "custom" (user-provided files)
+
+  # Custom data options - used when source: "custom"
+  # Custom OSM files must be placed in the specified paths
+  # pbf files (required): Raw OpenStreetMap data files
+  #   - Files must follow the naming pattern: <country>-latest.osm.pbf
+  #   - Example: bolivia-latest.osm.pbf, nigeria-latest.osm.pbf
+  #   - Country codes should match those specified in the 'countries' list above
+  # power files (optional): Pre-processed power infrastructure JSON files
+  custom_path:
+    pbf: "data/custom/osm/pbf"  # Path to pbf files (required if source: "custom")
+    power: "data/custom/osm/power"  # Path to power JSON files (optional, will use pbf if not set)
+
+  # Historical data options - used when source: "historical"
   # Set target date for OSM data download in YYYY-MM-DD format
-  # Leave blank/commented out to use latest OSM data (default behavior)  
   # Available dates depend on OpenStreetMap historical data availability (generally from ~2012 onwards)
   # Examples: "2018-01-01", "2020-06-15", "2022-12-31"
-  osm_date: # "2020-01-01" 
+  target_date: # "2020-01-01"
 
 industry:
   reference_year: 2015
