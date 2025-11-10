@@ -127,8 +127,14 @@ if __name__ == "__main__":
     store_path_data = Path.joinpath(Path(BASE_DIR), "data", "osm", osm_subdir)
     country_list = country_list_to_geofk(snakemake.params.countries)
     custom_data = snakemake.config.get("custom_data", {}).get("osm_data", {})
-    set_custom_data = custom_data.get("set", False)
-    custom_data_path = custom_data.get("custom_path", "data/custom/osm")
+    # it can be the case `custom_data:osm_data` are simply set to false
+    # and no additional parameters are provided
+    if isinstance(custom_data, dict):    
+        set_custom_data = custom_data.get("set", False)
+        custom_data_path = custom_data.get("custom_path", "data/custom/osm")
+    else:
+         set_custom_data = False
+         custom_data_path = None  
 
     # Parse and validate target_date if provided as string
     if target_date and isinstance(target_date, str):
