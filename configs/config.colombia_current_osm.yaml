@@ -1,0 +1,50 @@
+# base configuration file for Colombia
+countries: ["CO"]
+
+enable:
+  retrieve_databundle: false
+  build_natura_raster: false
+  progress_bar: false
+
+run:
+  name: "co2_limits" # use this to keep track of runs with different settings
+  shared_cutouts: true # set to true to share the default cutout(s) across runs
+
+scenario:
+  simpl: [""]
+  ll: ["copt"]
+  clusters: [10]
+  opts: [Co2L-3h, Co2L0.0-3H, Co2L0.2-3H, Co2L0.5-3H]
+  planning_horizons: # investment years for myopic and perfect; or costs year for overnight
+  - 2020
+
+historical_osm_data:
+  osm_date: ""
+
+electricity:
+  custom_powerplants: "replace"
+
+snapshots:
+  start: "2013-01-01"
+  end: "2014-01-01"
+  inclusive: "left" # end is not inclusive
+
+solving:
+  options:
+    load_shedding: 100
+  solver:
+    name: highs
+    options: highs-default
+
+solver_options:
+  highs-default:
+    threads: 4
+    solver: "ipm"
+    run_crossover: "off"
+    small_matrix_value: 1e-6
+    large_matrix_value: 1e9
+    parallel: "on"
+    random_seed: 123
+    primal_feasibility_tolerance: 1e-2
+    dual_feasibility_tolerance: 1e-2 
+    ipm_optimality_tolerance: 1e-2
