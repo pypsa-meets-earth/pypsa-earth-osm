@@ -261,12 +261,14 @@ def _load_transformers_from_osm(fp_osm_transformers, buses):
 
     return transformers
 
+
 def _load_regional_linetypes(line_types_csv):
     line_types = read_csv_nafix(
-            line_types_csv,
-            dtype=dict(country="str", v_nom="str", name="str", i_nom="str"),
-        )
+        line_types_csv,
+        dtype=dict(country="str", v_nom="str", name="str", i_nom="str"),
+    )
     return line_types
+
 
 def _get_linetypes_config(line_types, voltages):
     """
@@ -292,6 +294,7 @@ def _get_linetypes_config(line_types, voltages):
             f"Voltages {vnoms_diff} not in the {line_types} or {voltages} list."
         )
     return {k: v for k, v in line_types.items() if k in voltages}
+
 
 def _load_lines_config(fl):
     line_config = read_csv_nafix(
