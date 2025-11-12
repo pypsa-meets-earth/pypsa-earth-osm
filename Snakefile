@@ -293,6 +293,7 @@ rule base_network:
         + "base_network/all_transformers_build_network.csv",
         country_shapes="resources/" + RDIR + "shapes/country_shapes.geojson",
         offshore_shapes="resources/" + RDIR + "shapes/offshore_shapes.geojson",
+        line_types="data/power/standard_types/line_types.csv"
     output:
         "networks/" + RDIR + "base.nc",
     log:
