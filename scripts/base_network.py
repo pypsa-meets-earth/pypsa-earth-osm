@@ -293,6 +293,13 @@ def _get_linetypes_config(line_types, voltages):
         )
     return {k: v for k, v in line_types.items() if k in voltages}
 
+def _load_lines_config(fl):
+    line_config = read_csv_nafix(
+        fl,
+        dtype=dict(country="str", v_nom="str", name="str"),
+    )
+    return line_config
+
 
 def _get_linetype_by_voltage(v_nom, d_linetypes):
     """
@@ -316,12 +323,12 @@ def _get_linetype_by_voltage(v_nom, d_linetypes):
     return line_type_min
 
 
-def _set_electrical_parameters_lines(lines_config, voltages, lines):
+def _set_electrical_parameters_lines(lines_config, lines, lines_ac_csv):
     if lines.empty:
         lines["type"] = []
         return lines
 
-    linetypes = _get_linetypes_config(lines_config["ac_types"], voltages)
+    linetypes = _load_lines_config(input.lines_ac_config)
 
     lines["carrier"] = "AC"
     lines["dc"] = False
@@ -335,12 +342,12 @@ def _set_electrical_parameters_lines(lines_config, voltages, lines):
     return lines
 
 
-def _set_electrical_parameters_dc_lines(lines_config, voltages, lines):
+def _set_electrical_parameters_dc_lines(lines_config, lines):
     if lines.empty:
         lines["type"] = []
         return lines
 
-    linetypes = _get_linetypes_config(lines_config["dc_types"], voltages)
+    linetypes = _load_lines_config(input.lines_dc_config)
 
     lines["carrier"] = "DC"
     lines["dc"] = True
