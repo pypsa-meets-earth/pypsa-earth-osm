@@ -334,7 +334,14 @@ def _set_electrical_parameters_lines(lines_config, voltages, lines, linetypes_ac
         lines["type"] = []
         return lines
 
-    linetypes = _load_lines_config(input.lines_ac_config)
+    line_types_source = lines_config.get("type_source", "automated")
+    if line_types_source == "custom":
+        custom_types = lines_config.get("ac_types")
+        linetypes = _get_linetypes_config(custom_types, voltages)
+    else:
+        # TODO Check what happens if requested voltages 
+        # are not included into `linetypes_ac_csv` specification
+        linetypes = _load_linetypes_csv(linetypes_ac_csv)
 
     lines["carrier"] = "AC"
     lines["dc"] = False
