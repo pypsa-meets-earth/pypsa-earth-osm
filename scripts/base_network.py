@@ -532,6 +532,7 @@ def base_network(
 ):
     linetypes_ac_csv = inputs["region_linetypes_ac"]
     linetypes_dc_csv = inputs["region_linetypes_dc"]
+    global_linetypes = inputs["global_linetypes"]
 
     buses = _load_buses_from_osm(inputs.osm_buses).reset_index(drop=True)
     lines = _load_lines_from_osm(inputs.osm_lines).reset_index(drop=True)

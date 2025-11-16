@@ -296,6 +296,7 @@ rule base_network:
         line_types="data/power/standard_types/line_types.csv",
         region_linetypes_ac="configs/ac_line_types.csv",
         region_linetypes_dc="configs/dc_line_types.csv",
+        global_linetypes="data/power/standard_types/line_types.csv",
     output:
         "networks/" + RDIR + "base.nc",
     log:
