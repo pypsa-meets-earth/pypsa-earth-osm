@@ -288,6 +288,7 @@ def _get_linetypes_config(line_types, voltages):
         Dictionary of linetypes for selected voltages.
     """
     # get voltages value that are not available in the line types
+    # TODO Account for the case when no voltages are available in line_types dictionary
     vnoms_diff = set(voltages).symmetric_difference(set(line_types.keys()))
     if vnoms_diff:
         logger.warning(
