@@ -296,6 +296,7 @@ def _get_linetypes_config(line_types, voltages):
         )
     return {k: v for k, v in line_types.items() if k in voltages}
 
+
 def _load_linetypes_csv(fl):
     """
     Load regional-specific linetypes
@@ -372,13 +373,13 @@ def _set_electrical_parameters_dc_lines(lines_config, voltages, lines, linetypes
     if lines.empty:
         lines["type"] = []
         return lines
-    
+
     line_types_source = lines_config.get("type_source", "automated")
     if line_types_source == "custom":
         custom_types = lines_config.get("dc_types")
         linetypes = _get_linetypes_config(custom_types, voltages)
     else:
-        # TODO Check what happens if requested voltages 
+        # TODO Check what happens if requested voltages
         # are not included into `linetypes_ac_csv` specification
         linetypes = _load_linetypes_csv(linetypes_dc_csv)
 
