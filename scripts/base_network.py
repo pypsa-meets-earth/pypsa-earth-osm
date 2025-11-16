@@ -301,7 +301,7 @@ def _load_linetypes_csv(fl):
     """
     line_config = read_csv_nafix(
         fl,
-        dtype=dict(country="str", v_nom="str", name="str"),
+        dtype=dict(country="str", v_nom="float", name="str"),
     )
     return line_config
 
