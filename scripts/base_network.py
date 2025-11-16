@@ -293,7 +293,7 @@ def _get_linetypes_config(line_types, voltages):
         )
     return {k: v for k, v in line_types.items() if k in voltages}
 
-def _load_lines_config(fl):
+def _load_linetypes_csv(fl):
     line_config = read_csv_nafix(
         fl,
         dtype=dict(country="str", v_nom="str", name="str"),
