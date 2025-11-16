@@ -323,7 +323,7 @@ def _get_linetype_by_voltage(v_nom, d_linetypes):
     return line_type_min
 
 
-def _set_electrical_parameters_lines(lines_config, lines, lines_ac_csv):
+def _set_electrical_parameters_lines(lines_config, voltages, lines, linetypes_ac_csv):
     if lines.empty:
         lines["type"] = []
         return lines
