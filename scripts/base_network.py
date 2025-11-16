@@ -279,8 +279,8 @@ def _get_linetypes_config(line_types, voltages):
     Parameters
     ----------
     line_types : dict
-        Dictionary of linetypes: keys are nominal voltages and values are linetypes.
-    voltages : list
+        Dictionary of linetypes: keys are float nominal voltages and values are string linetypes.
+    voltages : list of floats
         List of selected voltages.
 
     Returns
