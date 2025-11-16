@@ -527,10 +527,18 @@ def base_network(
 
     lines_ac = lines[~lines.dc].copy()
     lines_dc = lines[lines.dc].copy()
-    lines_ac = _set_electrical_parameters_lines(lines_config, voltages_config, lines_ac)
+    lines_ac = _set_electrical_parameters_lines(
+        lines_config,
+        voltages_config,
+        lines_ac,        
+        linetypes_ac_csv
+    )
 
     lines_dc = _set_electrical_parameters_dc_lines(
-        lines_config, voltages_config, lines_dc
+        lines_config,
+        voltages_config,
+        lines_dc,
+        linetypes_ac_csv
     )
 
     transformers = _set_electrical_parameters_transformers(
