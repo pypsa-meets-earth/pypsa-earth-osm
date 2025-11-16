@@ -447,6 +447,7 @@ def _set_lines_s_nom_from_linetypes(n, global_linetypes, countries):
 
     n.lines["s_nom"] = (
         np.sqrt(3)
+        # TODO Fix i_nom for regional types
         * n.lines["type"].map(n.line_types.i_nom)
         * n.lines.eval("v_nom * num_parallel")
     )
@@ -588,6 +589,7 @@ def base_network(
         lines_dc = _set_electrical_parameters_links(links_config, lines_dc)
         # parse line information into p_nom required for converters
         lines_dc["p_nom"] = lines_dc.apply(
+            # TODO Account for the regional specifics
             lambda x: x["v_nom"] * n.line_types.i_nom[x["type"]],
             axis=1,
             result_type="reduce",
