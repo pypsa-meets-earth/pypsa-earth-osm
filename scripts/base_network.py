@@ -355,7 +355,7 @@ def _set_electrical_parameters_lines(lines_config, voltages, lines, linetypes_ac
     return lines
 
 
-def _set_electrical_parameters_dc_lines(lines_config, lines):
+def _set_electrical_parameters_dc_lines(lines_config, voltages, lines, linetypes_dc_csv):
     if lines.empty:
         lines["type"] = []
         return lines
