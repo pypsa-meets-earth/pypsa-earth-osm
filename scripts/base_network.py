@@ -544,14 +544,16 @@ def base_network(
         lines_config,
         voltages_config,
         lines_ac,        
-        linetypes_ac_csv
+        linetypes_ac_csv,
+        countries
     )
 
     lines_dc = _set_electrical_parameters_dc_lines(
         lines_config,
         voltages_config,
         lines_dc,
-        linetypes_ac_csv
+        linetypes_ac_csv,
+        countries
     )
 
     transformers = _set_electrical_parameters_transformers(
