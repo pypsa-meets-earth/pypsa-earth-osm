@@ -432,8 +432,9 @@ def _set_electrical_parameters_converters(links_config, converters):
     return converters
 
 
-def _set_lines_s_nom_from_linetypes(n):
-    # Info: n.line_types is a lineregister from pypsa/pandapowers
+def _set_lines_s_nom_from_linetypes(n, global_linetypes, countries):
+    # NB: n.line_types is a lineregister from pypsa/pandapowers
+    global_linetypes_df = _load_linetypes_csv(global_linetypes)
     n.lines["s_nom"] = (
         np.sqrt(3)
         * n.lines["type"].map(n.line_types.i_nom)
@@ -587,7 +588,7 @@ def base_network(
     n.import_components_from_dataframe(transformers, "Transformer")
     n.import_components_from_dataframe(converters, "Link")
 
-    _set_lines_s_nom_from_linetypes(n)
+    _set_lines_s_nom_from_linetypes(n, global_linetypes, countries)
 
     _set_countries_and_substations(inputs, base_network_config, countries_config, n)
 
