@@ -435,6 +435,16 @@ def _set_electrical_parameters_converters(links_config, converters):
 def _set_lines_s_nom_from_linetypes(n, global_linetypes, countries):
     # NB: n.line_types is a lineregister from pypsa/pandapowers
     global_linetypes_df = _load_linetypes_csv(global_linetypes)
+
+    # TODO Improve filtering and remove duplication
+    country_filter = countries[0]
+    if country_filter in global_linetypes_df.country.values:
+        region_linetypes_df = global_linetypes_df.query("country == @country_filter")
+    else:
+        region_linetypes_df = global_linetypes_df.query("country == 'default'")    
+
+    line_type_series = n.line_types.i_nom.copy()
+
     n.lines["s_nom"] = (
         np.sqrt(3)
         * n.lines["type"].map(n.line_types.i_nom)
