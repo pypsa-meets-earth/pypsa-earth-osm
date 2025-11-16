@@ -294,8 +294,8 @@ rule base_network:
         country_shapes="resources/" + RDIR + "shapes/country_shapes.geojson",
         offshore_shapes="resources/" + RDIR + "shapes/offshore_shapes.geojson",
         line_types="data/power/standard_types/line_types.csv",
-        lines_ac_config="configs/ac_line_types.csv",
-        lines_dc_config="configs/dc_line_types.csv",
+        region_linetypes_ac="configs/ac_line_types.csv",
+        region_linetupes_dc="configs/dc_line_types.csv",
     output:
         "networks/" + RDIR + "base.nc",
     log:
