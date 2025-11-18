@@ -10,7 +10,7 @@ enable:
   progress_bar: false
 
 run:
-  name: "CO_benchmark" # use this to keep track of runs with different settings
+  name: "CO_benchmark_fix" # use this to keep track of runs with different settings
   shared_cutouts: true # set to true to share the default cutout(s) across runs
 
 scenario:
