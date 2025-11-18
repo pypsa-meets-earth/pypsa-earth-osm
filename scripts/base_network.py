@@ -456,7 +456,7 @@ def _set_lines_s_nom_from_linetypes(n, global_linetypes, countries):
     n.lines["s_nom"] = (
         np.sqrt(3)
         # TODO Fix i_nom for regional types
-        #* n.lines["type"].map(n.line_types.i_nom)
+        # * n.lines["type"].map(n.line_types.i_nom)
         * n.lines["type"].map(regional_types_df.i_nom.rename("type"))
         * n.lines.eval("v_nom * num_parallel")
     )
@@ -615,7 +615,9 @@ if __name__ == "__main__":
     if "snakemake" not in globals():
         from _helpers import mock_snakemake
 
-        snakemake = mock_snakemake("base_network", configfile="configs/scenarios/config.co.test.yaml" )
+        snakemake = mock_snakemake(
+            "base_network", configfile="configs/scenarios/config.co.test.yaml"
+        )
 
     configure_logging(snakemake)
 
