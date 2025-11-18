@@ -15,7 +15,7 @@ summary_dir: results/
 foresight: overnight
 
 
-countries: ["NG", "BJ"]
+countries: ["CO"]
 # Can be replaced by country ["NG", "BJ"], continent ["Africa"] or user-specific region, see more at https://pypsa-earth.readthedocs.io/en/latest/configuration.html#top-level-configuration
 
 enable:
@@ -32,7 +32,6 @@ enable:
   custom_busmap: false # if true, use "data/custom_busmap_elec_s{simpl}_{clusters}.csv" for the clustering instead of the clustering algorithms
 
 
-
 custom_rules: [] # Default empty [] or link to custom rule file e.g. ["my_folder/my_rules.smk"] that add rules to Snakefile
 
 run:
@@ -46,7 +45,7 @@ scenario:
   simpl: [""]
   ll: ["copt"]
   clusters: [10]
-  opts: [Co2L-3h]
+  opts: [3h] #[Co2L-3h]
   planning_horizons: # investment years for myopic and perfect; or costs year for overnight
   - 2030
   sopts:
@@ -89,9 +88,9 @@ cluster_options:
     exclude_carriers: []
     remove_stubs: true
     remove_stubs_across_borders: false
-    p_threshold_drop_isolated: 20 # [MW] isolated (sub)networks or nodes are being discarded if total mean power is below the specified threshold
-    p_threshold_merge_isolated: 300 # [MW] isolated (sub)networks or nodes are being merged into a single isolated bus if total mean power is below the specified threshold
-    s_threshold_fetch_isolated: false # [-] a share of the national load for merging an isolated network into a backbone network
+    p_threshold_drop_isolated: false # [MW] isolated (sub)networks or nodes are being discarded if total mean power is below the specified threshold
+    p_threshold_merge_isolated: false # [MW] isolated (sub)networks or nodes are being merged into a single isolated bus if total mean power is below the specified threshold
+    s_threshold_fetch_isolated: 0.1 # [-] a share of the national load for merging an isolated network into a backbone network
   cluster_network:
     algorithm: kmeans
     feature: solar+onwind-time
@@ -136,7 +135,7 @@ subregion:
 
 clean_osm_data_options: # osm = OpenStreetMap
   names_by_shapes: true # Set the country name based on the extended country shapes
-  threshold_voltage: 51000 # [V] minimum voltage threshold to keep the asset (cable, line, generator, etc.) [V]
+  threshold_voltage: 110000 # [V] minimum voltage threshold to keep the asset (cable, line, generator, etc.) [V]
   tag_substation: "transmission" # Filters only substations with 'transmission' tag, ('distribution' also available)
   add_line_endings: true # When "True", then line endings are added to the dataset of the substations
   generator_name_method: OSM # Methodology to specify the name to the generator. Options: OSM (name as by OSM dataset), closest_city (name by the closest city)
@@ -155,8 +154,8 @@ build_osm_network: # Options of the build_osm_network script; osm = OpenStreetMa
   force_ac: false # When true, it forces all components (lines and substation) to be AC-only. To be used if DC assets create problem.
 
 base_network:
-  min_voltage_substation_offshore: 51000 # [V] minimum voltage of the offshore substations
-  min_voltage_rebase_voltage: 51000 # [V] minimum voltage in base network
+  min_voltage_substation_offshore: 110000 # [V] minimum voltage of the offshore substations
+  min_voltage_rebase_voltage: 110000 # [V] minimum voltage in base network
 
 load_options:
   ssp: "ssp2-2.6" # shared socio-economic pathway (GDP and population growth) scenario to consider
@@ -179,7 +178,7 @@ co2_budget:
 
 electricity:
   base_voltage: 380.
-  voltages: [132., 220., 300., 380., 500., 750.]
+  voltages: [110., 115., 220., 230., 300., 500.]
   co2limit: 7.75e+7 # European default, 0.05 * 3.1e9*0.5, needs to be adjusted for Africa
   co2base: 1.487e+9 # European default, adjustment to Africa necessary
   agg_p_nom_limits: # enables to set country-wise maximum and minimum generation capacities for generators (e.g. renewables, nuclear, and geothermal)
@@ -206,7 +205,7 @@ electricity:
     Link: [] # H2 pipeline
 
   powerplants_filter: (DateOut >= 2022 or DateOut != DateOut)
-  custom_powerplants: false #  "false" use only powerplantmatching (ppm) data, "merge" combines ppm and custom powerplants, "replace" use only custom powerplants
+  custom_powerplants: "replace" #  "false" use only powerplantmatching (ppm) data, "merge" combines ppm and custom powerplants, "replace" use only custom powerplants
 
   conventional_carriers: [nuclear, oil, OCGT, CCGT, coal, lignite, geothermal, biomass]
   renewable_carriers: [solar, onwind, offwind-ac, offwind-dc, hydro]
