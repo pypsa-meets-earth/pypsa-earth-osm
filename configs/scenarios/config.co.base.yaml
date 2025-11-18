@@ -17,7 +17,8 @@ scenario:
   simpl: [""]
   ll: ["copt"]
   clusters: [10]
-  opts: [Co2L-3h]
+  # TODO Investigate unintended constraining of emissions with empty `Co2L`
+  opts: [3h] #[Co2L-3h]
   planning_horizons: # investment years for myopic and perfect; or costs year for overnight
   - 2020
 
