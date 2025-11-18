@@ -4,14 +4,8 @@
 
 countries: ["CO"]
 
-enable:
-  retrieve_databundle: false
-  build_natura_raster: false
-  progress_bar: false
-
 run:
-  name: "CO_benchmark_fix" # use this to keep track of runs with different settings
-  shared_cutouts: true # set to true to share the default cutout(s) across runs
+  name: "CO_validation" # use this to keep track of runs with different settings
 
 scenario:
   simpl: [""]
@@ -29,24 +23,8 @@ snapshots:
   inclusive: "left" # end is not inclusive
 
 electricity:
-  base_voltage: 380.
-  voltages: [132., 220., 300., 380., 500., 750.]
-  co2limit: 7.75e+7 # European default, 0.05 * 3.1e9*0.5, needs to be adjusted for Africa
-  co2base: 1.487e+9 # European default, adjustment to Africa necessary
-  hvdc_as_lines: false # should HVDC lines be modeled as `Line` or as `Link` component?
   automatic_emission: true
   automatic_emission_base_year: 2014 # https://climatepromise.undp.org/what-we-do/where-we-work/colombia
-
-  operational_reserve: # like https://genxproject.github.io/GenX/dev/core/#Reserves
-    activate: false
-    epsilon_load: 0.02 # share of total load
-    epsilon_vres: 0.02 # share of total renewable supply
-    contingency: 0 # fixed capacity in MW
-
-  max_hours:
-    battery: 6
-    H2: 168
-
   extendable_carriers:
     Generator: []
     StorageUnit: [] # battery, H2
@@ -55,19 +33,6 @@ electricity:
 
   powerplants_filter: (DateOut >= 2022 or DateOut != DateOut)
   custom_powerplants: "replace" #  "false" use only powerplantmatching (ppm) data, "merge" combines ppm and custom powerplants, "replace" use only custom powerplants
-
-cluster_options:
-  simplify_network:
-    to_substations: false # network is simplified to nodes with positive or negative power injection (i.e. substations or offwind connections)
-    algorithm: kmeans # choose from: [hac, kmeans]
-    feature: solar+onwind-time # only for hac. choose from: [solar+onwind-time, solar+onwind-cap, solar-time, solar-cap, solar+offwind-cap] etc.
-    exclude_carriers: []
-    remove_stubs: true
-    remove_stubs_across_borders: false
-    p_threshold_drop_isolated: false # [MW] isolated (sub)networks or nodes are being discarded if total mean power is below the specified threshold
-    p_threshold_merge_isolated: false # [MW] isolated (sub)networks or nodes are being merged into a single isolated bus if total mean power is below the specified threshold
-    s_threshold_fetch_isolated: 0.1 # [-] a share of the national load for merging an isolated network into a backbone network
-
 
 atlite:
   nprocesses: 4
@@ -207,11 +172,3 @@ renewable:
     clip_p_max_pu: 1.e-2
     extendable: true
     csp_model: advanced # simple or advanced
-
-sector:
-  chp: false
-
-solving:
-  solver:
-    name: highs
-    options: highs-default
