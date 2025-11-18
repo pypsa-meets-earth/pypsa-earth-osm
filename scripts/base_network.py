@@ -448,6 +448,7 @@ def _set_lines_s_nom_from_linetypes(n, global_linetypes, countries):
     else:
         region_linetypes_df = global_linetypes_df.query("country == 'default'")
 
+    # TODO integrate in-built PyPSA types
     line_type_series = n.line_types.i_nom.copy()
 
     regional_types_df = region_linetypes_df.set_index("name")
@@ -614,7 +615,7 @@ if __name__ == "__main__":
     if "snakemake" not in globals():
         from _helpers import mock_snakemake
 
-        snakemake = mock_snakemake("base_network")
+        snakemake = mock_snakemake("base_network", configfile="configs/scenarios/config.co.test.yaml" )
 
     configure_logging(snakemake)
 
