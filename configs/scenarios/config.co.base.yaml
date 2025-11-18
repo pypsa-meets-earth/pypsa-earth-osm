@@ -53,6 +53,22 @@ electricity:
     Store: []
     Link: [] # H2 pipeline
 
+  powerplants_filter: (DateOut >= 2022 or DateOut != DateOut)
+  custom_powerplants: "replace" #  "false" use only powerplantmatching (ppm) data, "merge" combines ppm and custom powerplants, "replace" use only custom powerplants
+
+cluster_options:
+  simplify_network:
+    to_substations: false # network is simplified to nodes with positive or negative power injection (i.e. substations or offwind connections)
+    algorithm: kmeans # choose from: [hac, kmeans]
+    feature: solar+onwind-time # only for hac. choose from: [solar+onwind-time, solar+onwind-cap, solar-time, solar-cap, solar+offwind-cap] etc.
+    exclude_carriers: []
+    remove_stubs: true
+    remove_stubs_across_borders: false
+    p_threshold_drop_isolated: false # [MW] isolated (sub)networks or nodes are being discarded if total mean power is below the specified threshold
+    p_threshold_merge_isolated: false # [MW] isolated (sub)networks or nodes are being merged into a single isolated bus if total mean power is below the specified threshold
+    s_threshold_fetch_isolated: 0.1 # [-] a share of the national load for merging an isolated network into a backbone network
+
+
 atlite:
   nprocesses: 4
   cutouts:
