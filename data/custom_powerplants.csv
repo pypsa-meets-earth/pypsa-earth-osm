@@ -45,12 +45,12 @@
 36,Calderas,Hydro,,PP,CO,26,,,0,0,0,1988.035714,1988.035714,2088.035714,7.7918,-74.7732,{nan},{'GPD': {'WRI1018560'}}
 30,Esmeralda Colombia,Hydro,Run-Of-River,PP,CO,22.18248946,,,0,0,0,1963,1963,2063,5.0401,-75.7271,"{nan, nan}",{'GEO': {'GEO-43471'}}
 31,Insula Colombia,Hydro,Run-Of-River,PP,CO,13.30949368,,,0,0,0,1951,1951,2051,5,-75.6459,"{nan, nan, nan}",{'GEO': {'GEO-43470'}}
-276,Termobarranquilla,CCGT,CCGT,PP,CO,981,,,,,,1980,1998,2067,10.937252,-74.764098,{nan},{GEM},
-277,Cartagena,CCGT,CCGT,PP,CO,203,,,,,,1973,1980,,10.3555,-75.5109,{nan},{GEM},
-278,Incipiente,Biomass,Biomass,PP,CO,19,,,,,,2016,,,4.319,-76.0888,{nan},{GEM},
-279,Ipsa ,Biomass,Biomass,PP,CO,34,,,,,,2009,,,3.631995,-76.2899786,{nan},{GEM},
-280,Riopaila,Biomass,Biomass,PP,CO,36,,,,,,2015,,,4.319,-76.0888,{nan},{GEM},
-281,Risaralda,Biomass,Biomass,PP,CO,34.5,,,,,,2002,,,4.9069161048642,-75.8966070846554,{nan},{GEM},
-282,Smurfit,Biomass,Biomass,PP,CO,21,,,,,,2009,,,11.0300868659863,-74.8113420091137,{nan},{GEM},
-283,El Alcaraván,Biomass,Biomass,PP,CO,35,,,,,,2017,,,4.1772,-72.6057,{nan},{GEM},
-284,Incauca 2,Biomass,Biomass,PP,CO,52,,,,,,2023,,,3.27697856566258,-76.3187670465231,{nan},{GEM},
+276,Termobarranquilla,CCGT,CCGT,PP,CO,981,,,,,,1980,1998,2067,10.937252,-74.764098,{nan},{GEM}
+277,Cartagena,CCGT,CCGT,PP,CO,203,,,,,,1973,1980,,10.3555,-75.5109,{nan},{GEM}
+278,Incipiente,Biomass,Biomass,PP,CO,19,,,,,,2016,,,4.319,-76.0888,{nan},{GEM}
+279,Ipsa ,Biomass,Biomass,PP,CO,34,,,,,,2009,,,3.631995,-76.2899786,{nan},{GEM}
+280,Riopaila,Biomass,Biomass,PP,CO,36,,,,,,2015,,,4.319,-76.0888,{nan},{GEM}
+281,Risaralda,Biomass,Biomass,PP,CO,34.5,,,,,,2002,,,4.9069161048642,-75.8966070846554,{nan},{GEM}
+282,Smurfit,Biomass,Biomass,PP,CO,21,,,,,,2009,,,11.0300868659863,-74.8113420091137,{nan},{GEM}
+283,El Alcaraván,Biomass,Biomass,PP,CO,35,,,,,,2017,,,4.1772,-72.6057,{nan},{GEM}
+284,Incauca 2,Biomass,Biomass,PP,CO,52,,,,,,2023,,,3.27697856566258,-76.3187670465231,{nan},{GEM}
