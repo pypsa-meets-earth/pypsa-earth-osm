@@ -330,7 +330,9 @@ def _get_linetype_by_voltage(v_nom, d_linetypes):
     return line_type_min
 
 
-def _set_electrical_parameters_lines(lines_config, voltages, lines, linetypes_ac_csv, countries):
+def _set_electrical_parameters_lines(
+    lines_config, voltages, lines, linetypes_ac_csv, countries
+):
     """
     Set transmission capacity of AC lines
     """
@@ -349,12 +351,12 @@ def _set_electrical_parameters_lines(lines_config, voltages, lines, linetypes_ac
         if country_filter in linetypes_df.country.values:
             region_linetypes_df = linetypes_df.query("country == @country_filter")
         else:
-            region_linetypes_df = linetypes_df.query("country == 'default'")    
+            region_linetypes_df = linetypes_df.query("country == 'default'")
 
         requested_types = dict(
             zip(region_linetypes_df.v_nom, region_linetypes_df.line_type)
         )
-    
+
     linetypes = _get_linetypes_config(requested_types, voltages)
 
     lines["carrier"] = "AC"
@@ -369,7 +371,9 @@ def _set_electrical_parameters_lines(lines_config, voltages, lines, linetypes_ac
     return lines
 
 
-def _set_electrical_parameters_dc_lines(lines_config, voltages, lines, linetypes_dc_csv, countries):
+def _set_electrical_parameters_dc_lines(
+    lines_config, voltages, lines, linetypes_dc_csv, countries
+):
     if lines.empty:
         lines["type"] = []
         return lines
@@ -442,7 +446,7 @@ def _set_lines_s_nom_from_linetypes(n, global_linetypes, countries):
     if country_filter in global_linetypes_df.country.values:
         region_linetypes_df = global_linetypes_df.query("country == @country_filter")
     else:
-        region_linetypes_df = global_linetypes_df.query("country == 'default'")    
+        region_linetypes_df = global_linetypes_df.query("country == 'default'")
 
     line_type_series = n.line_types.i_nom.copy()
 
@@ -558,19 +562,11 @@ def base_network(
     lines_ac = lines[~lines.dc].copy()
     lines_dc = lines[lines.dc].copy()
     lines_ac = _set_electrical_parameters_lines(
-        lines_config,
-        voltages_config,
-        lines_ac,        
-        linetypes_ac_csv,
-        countries
+        lines_config, voltages_config, lines_ac, linetypes_ac_csv, countries
     )
 
     lines_dc = _set_electrical_parameters_dc_lines(
-        lines_config,
-        voltages_config,
-        lines_dc,
-        linetypes_ac_csv,
-        countries
+        lines_config, voltages_config, lines_dc, linetypes_ac_csv, countries
     )
 
     transformers = _set_electrical_parameters_transformers(
