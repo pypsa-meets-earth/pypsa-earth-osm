@@ -641,7 +641,7 @@ sector:
     central: 180
   boilers: true
   oil_boilers: false
-  chp: true
+  chp: false
   micro_chp: false
   solar_thermal: true
   heat_pump_sink_T: 55 #Celsius, based on DTU / large area radiators; used un build_cop_profiles.py
@@ -788,8 +788,8 @@ solving:
     # nhours: 10
 
   solver:
-    name: gurobi
-    options: gurobi-default
+    name: highs
+    options: highs-default
 
   solver_options:
     highs-default:
