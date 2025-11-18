@@ -450,13 +450,13 @@ def _set_lines_s_nom_from_linetypes(n, global_linetypes, countries):
 
     line_type_series = n.line_types.i_nom.copy()
 
-    regional_types_df = global_linetypes_df.set_index("name")
+    regional_types_df = region_linetypes_df.set_index("name")
 
     n.lines["s_nom"] = (
         np.sqrt(3)
         # TODO Fix i_nom for regional types
         #* n.lines["type"].map(n.line_types.i_nom)
-        * n.lines["type"].map(regional_types_df.i_nom)
+        * n.lines["type"].map(regional_types_df.i_nom.rename("type"))
         * n.lines.eval("v_nom * num_parallel")
     )
     # Re-define s_nom for DC lines
