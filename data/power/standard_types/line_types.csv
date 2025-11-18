@@ -1,9 +1,9 @@
 country,v_nom,name,i_nom
 CO,110,"Not specified 100kV",0.47
-CO,115,"Not specified 115.0",0.30
-CO,220,"Not specified 220.0",0.78
-CO,230,"Not specified 230.0,",2.84
-CO,500,"Not specified 500.0",0.69
+CO,115,"Not specified 115kV",0.30
+CO,220,"Not specified 220kV",0.78
+CO,230,"Not specified 230kV,",2.84
+CO,500,"Not specified 500kV",0.69
 BO,25,"Partridge (25kV)",0.31
 BO,44,"Penguin (44kV)",0.27
 BO,69,"Penguin (69kV)",0.44
