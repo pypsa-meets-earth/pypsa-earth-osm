@@ -30,3 +30,17 @@ clean:
 	snakemake -j1 solve_sector_networks --delete-all-output --configfile test/config.sector.yaml
 	snakemake -j1 solve_sector_networks_myopic --delete-all-output --configfile config.tutorial.yaml test/config.myopic.yaml
 	echo "Clean-up complete."
+
+simulate:
+	set -e
+	snakemake solve_all_networks -call --configfile configs/scenarios/config.co.2030greenp.osm2024.yaml
+	echo "Simulation completed GreenPow with OSM 2024."
+	snakemake solve_all_networks -call --configfile configs/scenarios/config.co.2030greenp.yaml
+	echo "Simulation completed GreenPow with the latest OSM."
+	snakemake solve_all_networks -call --configfile configs/scenarios/config.co.2030bau.osm2024.yaml
+	echo "Simulation completed BAU with OSM 2024."
+	snakemake solve_all_networks -call --configfile configs/scenarios/config.co.2030bau.yaml
+	echo "Simulation completed BAU with the latest OSM."
+	echo "The simulations run done."
+
+
