@@ -20,12 +20,12 @@ scenario:
 
 snapshots:
   start: "2013-01-01"
-  end: "2013-01-08"  
+  end: "2013-01-08"
   # end: "2014-01-01"
   inclusive: "left" # end is not inclusive
 
 custom_data:
-  osm_data: "latest" # if "True" then custom file for osm (pbf and power files) must be placed in "data/custom/osm" folder. 
+  osm_data: "latest" # if "True" then custom file for osm (pbf and power files) must be placed in "data/custom/osm" folder.
 
 lines:
   type_source: "automatic" # "custom" "automatic"

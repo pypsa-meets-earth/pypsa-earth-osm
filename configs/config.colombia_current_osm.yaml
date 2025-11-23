@@ -46,5 +46,5 @@ solver_options:
     parallel: "on"
     random_seed: 123
     primal_feasibility_tolerance: 1e-2
-    dual_feasibility_tolerance: 1e-2 
+    dual_feasibility_tolerance: 1e-2
     ipm_optimality_tolerance: 1e-2
