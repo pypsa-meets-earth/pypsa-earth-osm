@@ -9,7 +9,7 @@ run:
 
 scenario:
   simpl: [""]
-  ll: [""]
+  ll: ["l1.1"]
   clusters: [10]
   # TODO Investigate unintended constraining of emissions with empty `Co2L`
   opts: [Co2L0.0-3h] #[Co2L-3h]
