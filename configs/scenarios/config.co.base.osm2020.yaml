@@ -5,7 +5,7 @@
 countries: ["CO"]
 
 run:
-  name: "CO_validation_osm2024" # use this to keep track of runs with different settings
+  name: "CO_validation_osm2020" # use this to keep track of runs with different settings
 
 scenario:
   simpl: [""]
