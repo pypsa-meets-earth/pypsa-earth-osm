@@ -32,12 +32,13 @@ clean:
 	echo "Clean-up complete."
 
 # run with `make -k -j 4 simulate_all`
-simulate_all: run_1 run_2 run_3 run_4
+# run with `make -k -j 2 simulate_all`
+simulate_all: run_2 run_3 run_4 # run_1 run_2 run_3 run_4
 
-run_1:
-	@echo "Starting BAU with OSM latest."
-	snakemake solve_all_networks -j 2 --configfile configs/scenarios/config.co.2030bau.yaml
-	@echo "Simulation completed BAU with OSM latest."
+# run_1:
+# 	@echo "Starting BAU with OSM latest."
+# 	snakemake solve_all_networks -j 2 --configfile configs/scenarios/config.co.2030bau.yaml
+# 	@echo "Simulation completed BAU with OSM latest."
 
 run_2:
 	@echo "Starting BAU with OSM 2024."
