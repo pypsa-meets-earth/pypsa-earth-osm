@@ -31,7 +31,7 @@ clean:
 	snakemake -j1 solve_sector_networks_myopic --delete-all-output --configfile config.tutorial.yaml test/config.myopic.yaml
 	echo "Clean-up complete."
 
-# run with `make -k -j 4 simulate_all`
+# run with `make -k -j 3 simulate_all`
 # run with `make -k -j 2 simulate_all`
 simulate_all: run_2 run_3 run_4 # run_1 run_2 run_3 run_4
 
