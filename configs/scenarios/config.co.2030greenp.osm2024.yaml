@@ -58,7 +58,7 @@ osm_data:
   # Set target date for OSM data download in YYYY-MM-DD format
   # Available dates depend on OpenStreetMap historical data availability (generally from ~2012 onwards)
   # Examples: "2018-01-01", "2020-06-15", "2022-12-31"
-  target_date: 2024-01-01
+  target_date: "2024-01-01"
 
 atlite:
   nprocesses: 4
