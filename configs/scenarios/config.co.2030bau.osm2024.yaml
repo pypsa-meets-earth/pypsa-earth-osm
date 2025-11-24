@@ -2,14 +2,14 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-countries: ["CO"]
+countries: [CO]
 
 run:
-  name: "CO_2030bau.osm2024" # use this to keep track of runs with different settings
+  name: co_2030bau_osm2024   # use this to keep track of runs with different settings
 
 scenario:
-  simpl: [""]
-  ll: ["l1.0"]
+  simpl: ['']
+  ll: [l1.0]
   clusters: [10]
   # TODO Investigate unintended constraining of emissions with empty `Co2L`
   opts: [Ep0.05-3h] #[Co2L-3h]
@@ -17,13 +17,13 @@ scenario:
   - 2020
 
 snapshots:
-  start: "2013-01-01"
+  start: '2013-01-01'
   # end: "2013-01-08" # good for test runs
-  end: "2014-01-01"
-  inclusive: "left" # end is not inclusive
+  end: '2014-01-01'
+  inclusive: left   # end is not inclusive
 
 load_options:
-  ssp: "ssp2-2.6" # shared socio-economic pathway (GDP and population growth) scenario to consider
+  ssp: ssp2-2.6   # shared socio-economic pathway (GDP and population growth) scenario to consider
   weather_year: 2013 # Load scenarios available with different weather year (different renewable potentials)
   prediction_year: 2030 # Load scenarios available with different prediction year (GDP, population)
   scale: 1.12
@@ -36,12 +36,12 @@ electricity:
     Link: [] # H2 pipeline
 
   powerplants_filter: (DateOut >= 2022 or DateOut != DateOut)
-  custom_powerplants: "replace" #  "false" use only powerplantmatching (ppm) data, "merge" combines ppm and custom powerplants, "replace" use only custom powerplants
+  custom_powerplants: replace   #  "false" use only powerplantmatching (ppm) data, "merge" combines ppm and custom powerplants, "replace" use only custom powerplants
 
 # OpenStreetMap (OSM) data configuration
 # Unified configuration for OSM data source and options
 osm_data:
-  source: "latest" # Options: "latest" (latest OSM), "historical" (specific date), or "custom" (user-provided files)
+  source: latest   # Options: "latest" (latest OSM), "historical" (specific date), or "custom" (user-provided files)
 
   # Custom data options - used when source: "custom"
   # Custom OSM files must be placed in the specified paths
@@ -51,8 +51,8 @@ osm_data:
   #   - Country codes should match those specified in the 'countries' list above
   # power files (optional): Pre-processed power infrastructure JSON files
   custom_path:
-    pbf: "data/custom/osm/pbf"  # Path to pbf files (required if source: "custom")
-    power: "data/custom/osm/power"  # Path to power JSON files (optional, will use pbf if not set)
+    pbf: data/custom/osm/pbf    # Path to pbf files (required if source: "custom")
+    power: data/custom/osm/power    # Path to power JSON files (optional, will use pbf if not set)
 
   # Historical data options - used when source: "historical"
   # Set target date for OSM data download in YYYY-MM-DD format
@@ -94,7 +94,8 @@ renewable:
       # 80  - Permanent water bodies
       # 100 - Moss and lichen
       # 200 - Open sea
-      grid_codes: [20, 30, 40, 60, 100, 111, 112, 113, 114, 115, 116, 121, 122, 123, 124, 125, 126]
+      grid_codes: [20, 30, 40, 60, 100, 111, 112, 113, 114, 115, 116, 121, 122, 123,
+        124, 125, 126]
       distance: 1000
       distance_grid_codes: [50]
     natura: true
@@ -170,7 +171,7 @@ renewable:
       # show_progress: true
     carriers: [ror, PHS, hydro]
     PHS_max_hours: 6
-    hydro_max_hours: "energy_capacity_totals_by_country" # not active
+    hydro_max_hours: energy_capacity_totals_by_country   # not active
     hydro_max_hours_default: 72.0 # (optional, default 6) Default value of max_hours for hydro when NaN values are found
     clip_min_inflow: 1.0
     extendable: true
@@ -203,14 +204,14 @@ costs:
   year: 2030 # cost file selection, i.e. costs_2030.csv in this case; reference year for costs is always 2020
   technology_data_version: v0.13.2
   discountrate: [0.071] #, 0.086, 0.111]
-  country_specific_data: "" # (optional) Reference to the desired technology-data directory for techno-economic input data; Only "" and "US" supported, for other values check the technology-data output directory
+  country_specific_data: '' # (optional) Reference to the desired technology-data directory for techno-economic input data; Only "" and "US" supported, for other values check the technology-data output directory
   # Only needed if "US" is selected as `country_specific_data`, otherwise ignore
-  cost_scenario: "moderate" # only used if `country_specific_data: "US"`; can be "moderate", "advanced" or "conservative"
-  financial_case: "market" # only used if `country_specific_data: "US"`; can be "market" or "r&d"
+  cost_scenario: moderate   # only used if `country_specific_data: "US"`; can be "moderate", "advanced" or "conservative"
+  financial_case: market   # only used if `country_specific_data: "US"`; can be "market" or "r&d"
   # Management of output currencies and exchange rates
-  output_currency: "EUR" # full list of supported currencies at https://github.com/alexprengere/currencyconverter/blob/master/currency_converter/eurofxref.csv
+  output_currency: EUR   # full list of supported currencies at https://github.com/alexprengere/currencyconverter/blob/master/currency_converter/eurofxref.csv
   default_exchange_rate: 0.7532 # previously USD2013_to_EUR2013; should be sufficient as current data from 'technology-data` are either in EUR or USD; [EUR/USD] ECB: https://www.ecb.europa.eu/stats/exchange/eurofxref/html/eurofxref-graph-usd.en.html
-  future_exchange_rate_strategy: "reference" # reference uses the exchange rate from `reference_year` for all conversions, ensuring all costs are expressed in the same currency and year; "latest" uses the yearly average of the latest available exchange rates for the selected `output_currency`; "custom" allows to specify a `custom_future_exchange_rate` below
+  future_exchange_rate_strategy: reference   # reference uses the exchange rate from `reference_year` for all conversions, ensuring all costs are expressed in the same currency and year; "latest" uses the yearly average of the latest available exchange rates for the selected `output_currency`; "custom" allows to specify a `custom_future_exchange_rate` below
   custom_future_exchange_rate: None # if `future_exchange_rate_strategy: "custom"`, please insert here the desired output_currency-to-EUR exchange rate
   rooftop_share: 0.14 # based on the potentials, assuming (0.1 kW/m2 and 10 m2/person)
   fill_values:
