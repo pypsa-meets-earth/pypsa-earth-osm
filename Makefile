@@ -35,23 +35,23 @@ clean:
 simulate_all: run_1 run_2 run_3 run_4
 
 run_1:
-    @echo "Starting BAU with OSM latest."
-    snakemake solve_all_networks -j 2 --configfile configs/scenarios/config.co.2030bau.yaml
-    @echo "Simulation completed BAU with OSM latest."
+	@echo "Starting BAU with OSM latest."
+	snakemake solve_all_networks -j 2 --configfile configs/scenarios/config.co.2030bau.yaml
+	@echo "Simulation completed BAU with OSM latest."
 
 run_2:
-    @echo "Starting BAU with OSM 2024."
-    snakemake solve_all_networks -j 2 --configfile configs/scenarios/config.co.2030bau.osm2024.yaml
-    @echo "Simulation completed BAU with OSM 2024." 
+	@echo "Starting BAU with OSM 2024."
+	snakemake solve_all_networks -j 2 --configfile configs/scenarios/config.co.2030bau.osm2024.yaml
+	@echo "Simulation completed BAU with OSM 2024." 
 
 run_3:
-    @echo "Starting GreenPow with OSM latest."
-    snakemake solve_all_networks -j 2 --configfile configs/scenarios/config.co.2030greenp.yaml
-    @echo "Simulation completed GreenPow with OSM latest."
+	@echo "Starting GreenPow with OSM latest."
+	snakemake solve_all_networks -j 2 --configfile configs/scenarios/config.co.2030greenp.yaml
+	@echo "Simulation completed GreenPow with OSM latest."
 
 run_4:
-    @echo "Starting GreenPow with OSM 2024."
-    snakemake solve_all_networks -j 2 --configfile configs/scenarios/config.co.2030greenp.osm2024.yaml
-    @echo "Simulation completed GreenPow with OSM 2024."  	
+	@echo "Starting GreenPow with OSM 2024."
+	snakemake solve_all_networks -j 2 --configfile configs/scenarios/config.co.2030greenp.osm2024.yaml
+	@echo "Simulation completed GreenPow with OSM 2024."  	
 
 
