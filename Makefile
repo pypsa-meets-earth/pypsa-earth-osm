@@ -32,8 +32,7 @@ clean:
 	echo "Clean-up complete."
 
 # run with `make -k -j 3 simulate_all`
-# run with `make -k -j 2 simulate_all`
-simulate_all: run_2 run_4 # run_1 run_2 run_3 run_4
+simulate_all: run_2 run_3 run_4 # run_1 run_2 run_3 run_4
 
 # run_1:
 # 	@echo "Starting BAU with OSM latest."
@@ -41,18 +40,18 @@ simulate_all: run_2 run_4 # run_1 run_2 run_3 run_4
 # 	@echo "Simulation completed BAU with OSM latest."
 
 run_2:
-	@echo "Starting BAU with OSM 2020."
-	snakemake solve_all_networks -j 2 --configfile configs/scenarios/config.co.2030bau.osm2020.yaml
-	@echo "Simulation completed BAU with OSM 2020." 
+	@echo "Starting GreenPow2050 with OSM latest."
+	snakemake solve_all_networks -j 2 --configfile configs/scenarios/config.co.2050greenp.yaml
+	@echo "Simulation completed GreenPow2050 with OSM latest." 
 
-# run_3:
-# 	@echo "Starting GreenPow with OSM latest."
-# 	snakemake solve_all_networks -j 2 --configfile configs/scenarios/config.co.2030greenp.yaml
-# 	@echo "Simulation completed GreenPow with OSM latest."
+run_3:
+	@echo "Starting GreenPow2050 with OSM 2024."
+	snakemake solve_all_networks -j 2 --configfile configs/scenarios/config.co.2050greenp_osm2024.yaml
+	@echo "Simulation completed GreenPow2050 with OSM 2024."
 
 run_4:
-	@echo "Starting GreenPow with OSM 2020."
-	snakemake solve_all_networks -j 2 --configfile configs/scenarios/config.co.2030greenp.osm2020.yaml
-	@echo "Simulation completed GreenPow with OSM 2020."  	
+	@echo "Starting GreenPow2050 with OSM 2020."
+	snakemake solve_all_networks -j 2 --configfile configs/scenarios/config.co.2050greenp_osm2020.yaml
+	@echo "Simulation completed GreenPow2050 with OSM 2020."  	
 
 
