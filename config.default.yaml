@@ -200,6 +200,8 @@ electricity:
     H2: 168
 
   extendable_carriers:
+      # Note: For landlocked countries (e.g., Jordan, Austria, Switzerland), remove 'offwind-ac' and 'offwind-dc'
+          # from the Generator list below, as these offshore wind technologies require coastline access.
     Generator: [solar, onwind, offwind-ac, offwind-dc, OCGT]
     StorageUnit: [] # battery, H2
     Store: [battery, H2]
@@ -527,6 +529,9 @@ custom_data:
   gas_network: false # If "True" then a custom .csv file must be placed in "resources/custom_data/pipelines.csv" , If "False" the user can choose btw "greenfield" or Model built-in datasets. Please refer to ["sector"] below.
   export_ports: false # If "True" then a custom .csv file must be placed in "data/custom/export_ports.csv"
   airports: false # If "True" then a custom .csv file must be placed in "data/custom/airports.csv". Data format for aiports must be in the format of the airports.csv file in the data folder.
+  osm_data:
+    set: false # if "True" then custom file for osm (pbf and power files) must be placed in "data/custom/osm" folder.
+    custom_path: "" # if "True" then provide the specific absolute path of the custom folder e.g. (...\data\custom\osm)
 
 # OpenStreetMap (OSM) data configuration
 # Unified configuration for OSM data source and options
@@ -769,11 +774,12 @@ sector:
 
   conventional_generation: # generator : carrier
     OCGT: gas
+    CCGT: gas
     oil: oil
     coal: coal
     lignite: lignite
     biomass: biomass
-  keep_existing_capacities: true
+  keep_existing_capacities: false
 
 solving:
   options:
