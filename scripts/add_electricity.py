@@ -427,22 +427,80 @@ def attach_wind_and_solar(
             else:
                 caps = pd.Series(index=ds.indexes["bus"]).fillna(0)
 
-            n.madd(
-                "Generator",
-                ds.indexes["bus"],
-                " " + tech,
-                bus=ds.indexes["bus"],
-                carrier=tech,
-                p_nom=caps,
-                p_nom_extendable=tech in extendable_carriers["Generator"],
-                p_nom_min=caps,
-                p_nom_max=ds["p_nom_max"].to_pandas(),
-                p_max_pu=ds["profile"].transpose("time", "bus").to_pandas(),
-                weight=ds["weight"].to_pandas(),
-                marginal_cost=costs.at[suptech, "marginal_cost"],
-                capital_cost=capital_cost,
-                efficiency=costs.at[suptech, "efficiency"],
-            )
+            # TODO polish the hard-coded part
+            # NB number of clusters must match
+            n_run = pypsa.Network(snakemake.params.optimised_network_fl)
+
+            busmap = pd.read_csv(
+                snakemake.params.busmap_oper_fl
+            ).set_index("Bus")
+
+            if (tech == "solar") | (tech == "onwind"):
+                # TODO The buses must be mapped from `n_run` to `n`
+                # the goal is assigning right time-series of renewable potential
+                gens_tech_df = n_run.generators.query("carrier==@tech")
+
+                res_energy_bus = (
+                    ds["p_nom_max"].to_pandas() *
+                    ds["profile"].transpose("time", "bus").to_pandas().sum(axis=0) *
+                    ds["weight"].to_pandas()
+                )
+                res_energy_bus.index = res_energy_bus.index.astype("int64") 
+                res_energy_bus.index.name = "bus"
+
+                tech_busmap_df = busmap.copy()
+                tech_busmap_df["p_nom"] = 0
+
+                for cluster_idx in gens_tech_df.bus:
+                    #cluster_idx = gens_tech_df.bus[3]
+                    cluster_buses_df = tech_busmap_df.query("busmap == @cluster_idx")
+                    cluster_mask_ds = pd.to_numeric(ds.indexes["bus"], errors="coerce").isin(cluster_buses_df.index)
+                    alpha_i = res_energy_bus[cluster_mask_ds]
+                    alpha_cluster = res_energy_bus[cluster_mask_ds].sum()
+                    P_cluster = gens_tech_df.query("bus == @cluster_idx")["p_nom_opt"].values[0]
+                    p_i = P_cluster * (alpha_i / alpha_cluster)
+
+                    idx = tech_busmap_df.index.intersection(p_i.index)
+                    tech_busmap_df.loc[idx, "p_nom"] = p_i
+
+                n.madd(
+                    "Generator",
+                    ds.indexes["bus"],
+                    " " + tech,
+                    bus=ds.indexes["bus"],
+                    carrier=tech,
+                    p_nom=tech_busmap_df["p_nom"],
+                    p_nom_extendable=False,
+                    #p_nom_min=caps,
+                    p_nom_max=ds["p_nom_max"].to_pandas(),
+                    p_max_pu=ds["profile"].transpose("time", "bus").to_pandas(),
+                    weight=ds["weight"].to_pandas(),
+                    marginal_cost=costs.at[suptech, "marginal_cost"],
+                    capital_cost=capital_cost,
+                    efficiency=costs.at[suptech, "efficiency"],
+                )
+                logger.info(
+                    "Attaching {} generators with capacities [GW] \n{}".format(
+                        len(gens_tech_df["p_nom_opt"]), gens_tech_df["p_nom_opt"].sum().round(2)
+                    )
+                )                   
+            else:    
+                n.madd(
+                    "Generator",
+                    ds.indexes["bus"],
+                    " " + tech,
+                    bus=ds.indexes["bus"],
+                    carrier=tech,
+                    p_nom=caps,
+                    p_nom_extendable=tech in extendable_carriers["Generator"],
+                    p_nom_min=caps,
+                    p_nom_max=ds["p_nom_max"].to_pandas(),
+                    p_max_pu=ds["profile"].transpose("time", "bus").to_pandas(),
+                    weight=ds["weight"].to_pandas(),
+                    marginal_cost=costs.at[suptech, "marginal_cost"],
+                    capital_cost=capital_cost,
+                    efficiency=costs.at[suptech, "efficiency"],
+                )
 
 
 def attach_conventional_generators(
