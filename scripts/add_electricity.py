@@ -374,7 +374,10 @@ def attach_wind_and_solar(
 
     df = ppl.rename(columns={"country": "Country"})
 
+    # TODO Remember to remove a debug hard-coding
     for tech in technologies:
+    #for tech in ["onwind", "solar"]:
+    #for tech in ["solar"]:      
         if tech == "hydro":
             continue
 
@@ -965,12 +968,12 @@ if __name__ == "__main__":
     )
     attach_hydro(n, costs, ppl)
 
-    if snakemake.params.electricity.get("estimate_renewable_capacities"):
-        estimate_renewable_capacities_irena(
-            n,
-            snakemake.params.electricity["estimate_renewable_capacities"],
-            snakemake.params.countries,
-        )
+    #if snakemake.params.electricity.get("estimate_renewable_capacities"):
+    #    estimate_renewable_capacities_irena(
+    #        n,
+    #        snakemake.params.electricity["estimate_renewable_capacities"],
+    #        snakemake.params.countries,
+    #    )
 
     update_p_nom_max(n)
     add_nice_carrier_names(n, snakemake.config)
