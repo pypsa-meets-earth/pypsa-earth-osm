@@ -448,6 +448,8 @@ def attach_wind_and_solar(
                     ds["profile"].transpose("time", "bus").to_pandas().sum(axis=0) *
                     ds["weight"].to_pandas()
                 )
+                # TODO Test another vertion for weighting of installed capacities
+                res_energy_bus = ds["profile"].transpose("time", "bus").to_pandas().sum(axis=0)
                 res_energy_bus.index = res_energy_bus.index.astype("int64") 
                 res_energy_bus.index.name = "bus"
 
