@@ -5,7 +5,7 @@
 countries: [CO]
 
 run:
-  name: co_2050greenp_osm2020 # use this to keep track of runs with different settings
+  name: "co_2050greenp_osm2020" # use this to keep track of runs with different settings
 
 scenario:
   simpl: ['']
