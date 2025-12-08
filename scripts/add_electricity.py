@@ -457,7 +457,6 @@ def attach_wind_and_solar(
                 tech_busmap_df["p_nom"] = 0
 
                 for cluster_idx in gens_tech_df.bus:
-                    #cluster_idx = gens_tech_df.bus[3]
                     cluster_buses_df = tech_busmap_df.query("busmap == @cluster_idx")
                     cluster_mask_ds = pd.to_numeric(ds.indexes["bus"], errors="coerce").isin(cluster_buses_df.index)
                     alpha_i = res_energy_bus[cluster_mask_ds]
