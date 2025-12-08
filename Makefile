@@ -42,7 +42,7 @@ simulate_all: run_2 run_3 run_4 # run_1 run_2 run_3 run_4
 run_2:
 	@echo "Starting GreenPow2050 with OSM latest."
 	snakemake solve_all_networks -j 2 --configfile configs/scenarios/config.co.2050greenp.yaml
-	@echo "Simulation completed GreenPow2050 with OSM latest." 
+	@echo "Simulation completed GreenPow2050 with OSM latest."
 
 run_3:
 	@echo "Starting GreenPow2050 with OSM 2024."
@@ -52,6 +52,4 @@ run_3:
 run_4:
 	@echo "Starting GreenPow2050 with OSM 2020."
 	snakemake solve_all_networks -j 2 --configfile configs/scenarios/config.co.2050greenp_osm2020.yaml
-	@echo "Simulation completed GreenPow2050 with OSM 2020."  	
-
-
+	@echo "Simulation completed GreenPow2050 with OSM 2020."
