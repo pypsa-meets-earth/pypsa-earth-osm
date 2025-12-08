@@ -557,6 +557,9 @@ rule add_electricity:
         alternative_clustering=config["cluster_options"]["alternative_clustering"],
         renewable=config["renewable"],
         length_factor=config["lines"]["length_factor"],
+        optimised_network_fl=config["reference_fl"],
+        busmap_oper_fl=connfig["busmap_fl"],
+        recluster_fl=config["recluster_fl"],
     input:
         **{
             f"profile_{tech}": "resources/"
