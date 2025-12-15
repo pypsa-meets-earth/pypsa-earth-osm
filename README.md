@@ -4,7 +4,7 @@ SPDX-FileCopyrightText:  PyPSA-Earth and PyPSA-Eur Authors
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-# PyPSA-Earth-OSM: enabling synergies between OSM enhansment and energy modelling.
+# PyPSA-Earth-OSM: Bolivia Energy System Modeling
 
 <p align="left">
 by
@@ -13,6 +13,7 @@ by
 <a/>
 </p>
 
+> **Note**: This is the **Bolivia-specific modeling branch**. For general features and development, see the [`development` branch](https://github.com/pypsa-meets-earth/pypsa-earth-osm/tree/development).
 
 ## Development Status: **In progress**
 
@@ -24,9 +25,39 @@ by
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/pypsa-meets-earth/pypsa-earth-osm/main.svg)](https://results.pre-commit.ci/latest/github/pypsa-meets-earth/pypsa-earth/main)
 [![Discord](https://img.shields.io/discord/911692131440148490?logo=discord)](https://discord.gg/AnuJBk23FU)
 
-That is an experimental modeling implementation intended to be used for bridging OSM mapping work with enhansement of the energy modelling workflow.
+This branch is dedicated to energy system modeling and analysis for **Bolivia**. It contains Bolivia-specific configurations, data, network models, and analysis workflows built on the PyPSA-Earth-OSM framework.
 
-To run the stable modelling workflow for any country of the workd, please refer to [PyPSA-Earth repository](https://github.com/pypsa-meets-earth/pypsa-earth).
+## About This Branch
+
+The `bolivia-modeling` branch focuses on:
+- Bolivia-specific power grid topology and validation
+- Country-specific configuration files and parameters
+- Regional energy system analysis and optimization
+- Integration with Bolivia's power infrastructure data from OpenStreetMap
+
+For general PyPSA-Earth-OSM features and documentation, refer to the [`development` branch](https://github.com/pypsa-meets-earth/pypsa-earth-osm/tree/development).
+
+To run the stable modelling workflow for any country of the world, please refer to [PyPSA-Earth repository](https://github.com/pypsa-meets-earth/pypsa-earth).
+
+## Repository Structure
+
+PyPSA-Earth-OSM uses a multi-branch development strategy to enable parallel work on general features and country-specific modeling:
+
+### Branch Overview
+
+- **`development`** (Main development branch): Contains general features, enhancements, and infrastructure improvements for the Earth-OSM workflow. All new features and bug fixes should be developed here first.
+
+- **`columbia-modeling`**: Dedicated branch for Colombia-specific energy system modeling. Contains configurations, data, and analysis specific to Colombia's power grid.
+
+- **`bolivia-modeling`**: Dedicated branch for Bolivia-specific energy system modeling. Contains configurations, data, and analysis specific to Bolivia's power grid.
+
+### Contributing Guidelines
+
+- **For general features**: Create feature branches from `development` and submit pull requests to `development`.
+- **For country-specific modeling**: Work on the respective country branch (`columbia-modeling` or `bolivia-modeling`).
+- **Keeping branches updated**: Country-specific branches should periodically merge updates from `development` to incorporate new features and fixes.
+
+This structure allows researchers to focus on specific country analyses while maintaining a common codebase for shared functionality.
 
 ## How Earth-OSM Works
 
