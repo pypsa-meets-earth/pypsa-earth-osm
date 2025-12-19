@@ -438,6 +438,10 @@ def attach_wind_and_solar(
                 snakemake.params.busmap_oper_fl
             ).set_index("Bus")
 
+            reclustering_busmap = pd.read_csv(
+                snakemake.params.recluster_fl
+            )
+
             if (tech == "solar") | (tech == "onwind"):
                 # TODO The buses must be mapped from `n_run` to `n`
                 # the goal is assigning right time-series of renewable potential
@@ -454,6 +458,21 @@ def attach_wind_and_solar(
                 res_energy_bus.index.name = "bus"
 
                 tech_busmap_df = busmap.copy()
+
+                tech_busmap_df["busmap_opt"] = tech_busmap_df["busmap"]
+
+                #recluster_dict = dict(
+                #    zip(
+                #        reclustering_busmap["busmap_opim"],
+                #        reclustering_busmap["busmap_oper"]
+                #    )
+                #)
+                #tech_busmap_df["busmap"] = (
+                #    tech_busmap_df["busmap"]
+                #    .map(recluster_dict)
+                #    .fillna(tech_busmap_df["busmap"])
+                #)
+
                 tech_busmap_df["p_nom"] = 0
 
                 for cluster_idx in gens_tech_df.bus:
