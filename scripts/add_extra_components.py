@@ -151,44 +151,59 @@ def attach_stores(n, costs, config):
             marginal_cost=costs.at["fuel cell", "marginal_cost"],
         )
 
-    if "battery" in carriers:
-        b_buses_i = n.madd(
-            "Bus", buses_i + " battery", carrier="battery", **bus_sub_dict
-        )
+    n_run = pypsa.Network(snakemake.params.optimised_network_fl)
 
-        n.madd(
-            "Store",
-            b_buses_i,
-            bus=b_buses_i,
-            carrier="battery",
-            e_cyclic=True,
-            e_nom_extendable=True,
-            capital_cost=costs.at["battery storage", "capital_cost"],
-            marginal_cost=costs.at["battery", "marginal_cost"],
-        )
+    busmap = pd.read_csv(
+        snakemake.params.busmap_oper_fl
+    ).set_index("Bus")
 
-        n.madd(
-            "Link",
-            b_buses_i + " charger",
-            bus0=buses_i,
-            bus1=b_buses_i,
-            carrier="battery charger",
-            efficiency=costs.at["battery inverter", "efficiency"],
-            capital_cost=costs.at["battery inverter", "capital_cost"],
-            p_nom_extendable=True,
-            marginal_cost=costs.at["battery inverter", "marginal_cost"],
-        )
+    reclustering_busmap = pd.read_csv(
+        snakemake.params.recluster_fl
+    )
 
-        n.madd(
-            "Link",
-            b_buses_i + " discharger",
-            bus0=b_buses_i,
-            bus1=buses_i,
-            carrier="battery discharger",
-            efficiency=costs.at["battery inverter", "efficiency"],
-            p_nom_extendable=True,
-            marginal_cost=costs.at["battery inverter", "marginal_cost"],
-        )
+    batteries_tech_df = n_run.stores.query("carrier=='battery'")  
+    chargers_tech_df = n_run.links.query("carrier=='battery charger'") 
+    dischargers_tech_df = n_run.links.query("carrier=='battery discharger'")
+
+    tech_busmap_df = busmap.copy()
+    
+    b_buses_i = n.madd(
+        "Bus", buses_i + " battery", carrier="battery", **bus_sub_dict
+    )
+
+    n.madd(
+        "Store",
+        b_buses_i,
+        bus=b_buses_i,
+        carrier="battery",
+        e_cyclic=True,
+        e_nom=batteries_tech_df["e_nom_opt"],
+        capital_cost=costs.at["battery storage", "capital_cost"],
+        marginal_cost=costs.at["battery", "marginal_cost"],
+    )
+
+    n.madd(
+        "Link",
+        b_buses_i + " charger",
+        bus0=buses_i,
+        bus1=b_buses_i,
+        carrier="battery charger",
+        efficiency=costs.at["battery inverter", "efficiency"],
+        capital_cost=costs.at["battery inverter", "capital_cost"],
+        p_nom=chargers_tech_df["p_nom_opt"],
+        marginal_cost=costs.at["battery inverter", "marginal_cost"],
+    )
+
+    n.madd(
+        "Link",
+        b_buses_i + " discharger",
+        bus0=b_buses_i,
+        bus1=buses_i,
+        carrier="battery discharger",
+        efficiency=costs.at["battery inverter", "efficiency"],
+        p_nom=dischargers_tech_df["p_nom_opt"],
+        marginal_cost=costs.at["battery inverter", "marginal_cost"],
+    )
 
     if ("csp" in elec_opts["renewable_carriers"]) and (
         config["renewable"]["csp"]["csp_model"] == "advanced"
