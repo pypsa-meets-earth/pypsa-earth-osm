@@ -734,6 +734,9 @@ rule augmented_line_connections:
 rule add_extra_components:
     params:
         transmission_efficiency=config["sector"]["transmission_efficiency"],
+        optimised_network_fl=config["optimised_network_fl"],
+        busmap_oper_fl=config["busmap_oper_fl"],
+        recluster_fl=config["recluster_fl"],        
     input:
         overrides="data/override_component_attrs",
         network="networks/" + RDIR + "elec_s{simpl}_{clusters}.nc",
