@@ -926,7 +926,10 @@ if __name__ == "__main__":
     if "snakemake" not in globals():
         from _helpers import mock_snakemake
 
-        snakemake = mock_snakemake("add_electricity")
+        snakemake = mock_snakemake(
+            "add_electricity",
+            configfile="configs/scenarios/config.co.2050greenp_dispatch.yaml"
+        )
 
     configure_logging(snakemake)
 
