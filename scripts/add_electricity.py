@@ -376,8 +376,8 @@ def attach_wind_and_solar(
 
     # TODO Remember to remove a debug hard-coding
     for tech in technologies:
-    #for tech in ["onwind", "solar"]:
-    #for tech in ["solar"]:      
+        # for tech in ["onwind", "solar"]:
+        # for tech in ["solar"]:
         if tech == "hydro":
             continue
 
@@ -434,9 +434,7 @@ def attach_wind_and_solar(
             # NB number of clusters must match
             n_run = pypsa.Network(snakemake.params.optimised_network_fl)
 
-            busmap = pd.read_csv(
-                snakemake.params.busmap_oper_fl
-            ).set_index("Bus")
+            busmap = pd.read_csv(snakemake.params.busmap_oper_fl).set_index("Bus")
 
             reclustering_busmap = pd.read_csv(
                 snakemake.params.recluster_fl
@@ -448,9 +446,9 @@ def attach_wind_and_solar(
                 gens_tech_df = n_run.generators.query("carrier==@tech")
 
                 res_energy_bus = (
-                    ds["p_nom_max"].to_pandas() *
-                    ds["profile"].transpose("time", "bus").to_pandas().sum(axis=0) *
-                    ds["weight"].to_pandas()
+                    ds["p_nom_max"].to_pandas()
+                    * ds["profile"].transpose("time", "bus").to_pandas().sum(axis=0)
+                    * ds["weight"].to_pandas()
                 )
                 # TODO Test another vertion for weighting of installed capacities
                 res_energy_bus = ds["profile"].transpose("time", "bus").to_pandas().sum(axis=0)
@@ -476,11 +474,16 @@ def attach_wind_and_solar(
                 tech_busmap_df["p_nom"] = 0
 
                 for cluster_idx in gens_tech_df.bus:
+                    # cluster_idx = gens_tech_df.bus[3]
                     cluster_buses_df = tech_busmap_df.query("busmap == @cluster_idx")
-                    cluster_mask_ds = pd.to_numeric(ds.indexes["bus"], errors="coerce").isin(cluster_buses_df.index)
+                    cluster_mask_ds = pd.to_numeric(
+                        ds.indexes["bus"], errors="coerce"
+                    ).isin(cluster_buses_df.index)
                     alpha_i = res_energy_bus[cluster_mask_ds]
                     alpha_cluster = res_energy_bus[cluster_mask_ds].sum()
-                    P_cluster = gens_tech_df.query("bus == @cluster_idx")["p_nom_opt"].values[0]
+                    P_cluster = gens_tech_df.query("bus == @cluster_idx")[
+                        "p_nom_opt"
+                    ].values[0]
                     p_i = P_cluster * (alpha_i / alpha_cluster)
 
                     idx = tech_busmap_df.index.intersection(p_i.index)
@@ -494,7 +497,7 @@ def attach_wind_and_solar(
                     carrier=tech,
                     p_nom=tech_busmap_df["p_nom"],
                     p_nom_extendable=False,
-                    #p_nom_min=caps,
+                    # p_nom_min=caps,
                     p_nom_max=ds["p_nom_max"].to_pandas(),
                     p_max_pu=ds["profile"].transpose("time", "bus").to_pandas(),
                     weight=ds["weight"].to_pandas(),
@@ -504,10 +507,11 @@ def attach_wind_and_solar(
                 )
                 logger.info(
                     "Attaching {} generators with capacities [GW] \n{}".format(
-                        len(gens_tech_df["p_nom_opt"]), gens_tech_df["p_nom_opt"].sum().round(2)
+                        len(gens_tech_df["p_nom_opt"]),
+                        gens_tech_df["p_nom_opt"].sum().round(2),
                     )
-                )                   
-            else:    
+                )
+            else:
                 n.madd(
                     "Generator",
                     ds.indexes["bus"],
@@ -991,7 +995,7 @@ if __name__ == "__main__":
     )
     attach_hydro(n, costs, ppl)
 
-    #if snakemake.params.electricity.get("estimate_renewable_capacities"):
+    # if snakemake.params.electricity.get("estimate_renewable_capacities"):
     #    estimate_renewable_capacities_irena(
     #        n,
     #        snakemake.params.electricity["estimate_renewable_capacities"],
