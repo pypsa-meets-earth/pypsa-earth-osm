@@ -262,6 +262,14 @@ def _load_transformers_from_osm(fp_osm_transformers, buses):
     return transformers
 
 
+def _load_regional_linetypes(line_types_csv):
+    line_types = read_csv_nafix(
+        line_types_csv,
+        dtype=dict(country="str", v_nom="str", name="str", i_nom="str"),
+    )
+    return line_types
+
+
 def _get_linetypes_config(line_types, voltages):
     """
     Return the dictionary of linetypes for selected voltages. The dictionary is
@@ -271,8 +279,8 @@ def _get_linetypes_config(line_types, voltages):
     Parameters
     ----------
     line_types : dict
-        Dictionary of linetypes: keys are nominal voltages and values are linetypes.
-    voltages : list
+        Dictionary of linetypes: keys are float nominal voltages and values are string linetypes.
+    voltages : list of floats
         List of selected voltages.
 
     Returns
@@ -280,12 +288,24 @@ def _get_linetypes_config(line_types, voltages):
         Dictionary of linetypes for selected voltages.
     """
     # get voltages value that are not available in the line types
+    # TODO Account for the case when no voltages are available in line_types dictionary
     vnoms_diff = set(voltages).symmetric_difference(set(line_types.keys()))
     if vnoms_diff:
         logger.warning(
             f"Voltages {vnoms_diff} not in the {line_types} or {voltages} list."
         )
     return {k: v for k, v in line_types.items() if k in voltages}
+
+
+def _load_linetypes_csv(fl):
+    """
+    Load regional-specific linetypes
+    """
+    line_config = read_csv_nafix(
+        fl,
+        dtype=dict(country="str", v_nom="float", name="str"),
+    )
+    return line_config
 
 
 def _get_linetype_by_voltage(v_nom, d_linetypes):
@@ -310,12 +330,34 @@ def _get_linetype_by_voltage(v_nom, d_linetypes):
     return line_type_min
 
 
-def _set_electrical_parameters_lines(lines_config, voltages, lines):
+def _set_electrical_parameters_lines(
+    lines_config, voltages, lines, linetypes_ac_csv, countries
+):
+    """
+    Set transmission capacity of AC lines
+    """
     if lines.empty:
         lines["type"] = []
         return lines
 
-    linetypes = _get_linetypes_config(lines_config["ac_types"], voltages)
+    line_types_source = lines_config.get("type_source", "automated")
+    if line_types_source == "custom":
+        requested_types = lines_config.get("ac_types")
+    else:
+        linetypes_df = _load_linetypes_csv(linetypes_ac_csv)
+        # TODO Improve filtering for multiple countries
+        country_filter = countries[0]
+
+        if country_filter in linetypes_df.country.values:
+            region_linetypes_df = linetypes_df.query("country == @country_filter")
+        else:
+            region_linetypes_df = linetypes_df.query("country == 'default'")
+
+        requested_types = dict(
+            zip(region_linetypes_df.v_nom, region_linetypes_df.line_type)
+        )
+
+    linetypes = _get_linetypes_config(requested_types, voltages)
 
     lines["carrier"] = "AC"
     lines["dc"] = False
@@ -329,12 +371,21 @@ def _set_electrical_parameters_lines(lines_config, voltages, lines):
     return lines
 
 
-def _set_electrical_parameters_dc_lines(lines_config, voltages, lines):
+def _set_electrical_parameters_dc_lines(
+    lines_config, voltages, lines, linetypes_dc_csv, countries
+):
     if lines.empty:
         lines["type"] = []
         return lines
 
-    linetypes = _get_linetypes_config(lines_config["dc_types"], voltages)
+    line_types_source = lines_config.get("type_source", "automated")
+    if line_types_source == "custom":
+        custom_types = lines_config.get("dc_types")
+        linetypes = _get_linetypes_config(custom_types, voltages)
+    else:
+        # TODO Check what happens if requested voltages
+        # are not included into `linetypes_ac_csv` specification
+        linetypes = _load_linetypes_csv(linetypes_dc_csv)
 
     lines["carrier"] = "DC"
     lines["dc"] = True
@@ -386,11 +437,27 @@ def _set_electrical_parameters_converters(links_config, converters):
     return converters
 
 
-def _set_lines_s_nom_from_linetypes(n):
-    # Info: n.line_types is a lineregister from pypsa/pandapowers
+def _set_lines_s_nom_from_linetypes(n, global_linetypes, countries):
+    # NB: n.line_types is a lineregister from pypsa/pandapowers
+    global_linetypes_df = _load_linetypes_csv(global_linetypes)
+
+    # TODO Improve filtering and remove duplication
+    country_filter = countries[0]
+    if country_filter in global_linetypes_df.country.values:
+        region_linetypes_df = global_linetypes_df.query("country == @country_filter")
+    else:
+        region_linetypes_df = global_linetypes_df.query("country == 'default'")
+
+    # TODO integrate in-built PyPSA types
+    line_type_series = n.line_types.i_nom.copy()
+
+    regional_types_df = region_linetypes_df.set_index("name")
+
     n.lines["s_nom"] = (
         np.sqrt(3)
-        * n.lines["type"].map(n.line_types.i_nom)
+        # TODO Fix i_nom for regional types
+        # * n.lines["type"].map(n.line_types.i_nom)
+        * n.lines["type"].map(regional_types_df.i_nom.rename("type"))
         * n.lines.eval("v_nom * num_parallel")
     )
     # Re-define s_nom for DC lines
@@ -484,6 +551,10 @@ def base_network(
     transformers_config,
     voltages_config,
 ):
+    linetypes_ac_csv = inputs["region_linetypes_ac"]
+    linetypes_dc_csv = inputs["region_linetypes_dc"]
+    global_linetypes = inputs["global_linetypes"]
+
     buses = _load_buses_from_osm(inputs.osm_buses).reset_index(drop=True)
     lines = _load_lines_from_osm(inputs.osm_lines).reset_index(drop=True)
     transformers = _load_transformers_from_osm(inputs.osm_transformers, buses)
@@ -491,10 +562,12 @@ def base_network(
 
     lines_ac = lines[~lines.dc].copy()
     lines_dc = lines[lines.dc].copy()
-    lines_ac = _set_electrical_parameters_lines(lines_config, voltages_config, lines_ac)
+    lines_ac = _set_electrical_parameters_lines(
+        lines_config, voltages_config, lines_ac, linetypes_ac_csv, countries
+    )
 
     lines_dc = _set_electrical_parameters_dc_lines(
-        lines_config, voltages_config, lines_dc
+        lines_config, voltages_config, lines_dc, linetypes_ac_csv, countries
     )
 
     transformers = _set_electrical_parameters_transformers(
@@ -517,6 +590,7 @@ def base_network(
         lines_dc = _set_electrical_parameters_links(links_config, lines_dc)
         # parse line information into p_nom required for converters
         lines_dc["p_nom"] = lines_dc.apply(
+            # TODO Account for the regional specifics
             lambda x: x["v_nom"] * n.line_types.i_nom[x["type"]],
             axis=1,
             result_type="reduce",
@@ -527,7 +601,7 @@ def base_network(
     n.import_components_from_dataframe(transformers, "Transformer")
     n.import_components_from_dataframe(converters, "Link")
 
-    _set_lines_s_nom_from_linetypes(n)
+    _set_lines_s_nom_from_linetypes(n, global_linetypes, countries)
 
     _set_countries_and_substations(inputs, base_network_config, countries_config, n)
 
@@ -541,7 +615,9 @@ if __name__ == "__main__":
     if "snakemake" not in globals():
         from _helpers import mock_snakemake
 
-        snakemake = mock_snakemake("base_network")
+        snakemake = mock_snakemake(
+            "base_network", configfile="configs/scenarios/config.co.test.yaml"
+        )
 
     configure_logging(snakemake)
 
