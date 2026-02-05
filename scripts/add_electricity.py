@@ -437,12 +437,10 @@ def attach_wind_and_solar(
 
             busmap = pd.read_csv(snakemake.params.busmap_oper_fl).set_index("Bus")
 
-            reclustering_busmap = pd.read_csv(
-                snakemake.params.recluster_fl
-            )
+            reclustering_busmap = pd.read_csv(snakemake.params.recluster_fl)
 
             reclust_map = locate_reclustering(
-                clustered_path=snakemake.params.clustered_fl, 
+                clustered_path=snakemake.params.clustered_fl,
                 orig_buses_path=snakemake.input.regions_onshore,
             )
 
@@ -457,8 +455,10 @@ def attach_wind_and_solar(
                     * ds["weight"].to_pandas()
                 )
                 # TODO Test another vertion for weighting of installed capacities
-                res_energy_bus = ds["profile"].transpose("time", "bus").to_pandas().sum(axis=0)
-                res_energy_bus.index = res_energy_bus.index.astype("int64") 
+                res_energy_bus = (
+                    ds["profile"].transpose("time", "bus").to_pandas().sum(axis=0)
+                )
+                res_energy_bus.index = res_energy_bus.index.astype("int64")
                 res_energy_bus.index.name = "bus"
 
                 tech_busmap_df = busmap.copy()
@@ -468,7 +468,7 @@ def attach_wind_and_solar(
                 recluster_dict = dict(
                     zip(
                         reclustering_busmap["busmap_opim"],
-                        reclustering_busmap["busmap_oper"]
+                        reclustering_busmap["busmap_oper"],
                     )
                 )
                 tech_busmap_df["busmap"] = (
@@ -938,7 +938,7 @@ if __name__ == "__main__":
 
         snakemake = mock_snakemake(
             "add_electricity",
-            configfile="configs/scenarios/config.co.2050greenp_dispatch.yaml"
+            configfile="configs/scenarios/config.co.2050greenp_dispatch.yaml",
         )
 
     configure_logging(snakemake)

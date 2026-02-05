@@ -153,22 +153,15 @@ def attach_stores(n, costs, config):
 
     n_run = pypsa.Network(snakemake.params.optimised_network_fl)
 
-    busmap = pd.read_csv(
-        snakemake.params.busmap_oper_fl
-    ).set_index("Bus")
+    busmap = pd.read_csv(snakemake.params.busmap_oper_fl).set_index("Bus")
 
-    reclustering_busmap = pd.read_csv(
-        snakemake.params.recluster_fl
-    )
+    reclustering_busmap = pd.read_csv(snakemake.params.recluster_fl)
     recluster_dict = dict(
-        zip(
-            reclustering_busmap["busmap_opim"],
-            reclustering_busmap["busmap_oper"]
-        )
-    )     
+        zip(reclustering_busmap["busmap_opim"], reclustering_busmap["busmap_oper"])
+    )
 
-    batteries_tech_df = n_run.stores.query("carrier=='battery'")  
-    chargers_tech_df = n_run.links.query("carrier=='battery charger'") 
+    batteries_tech_df = n_run.stores.query("carrier=='battery'")
+    chargers_tech_df = n_run.links.query("carrier=='battery charger'")
     dischargers_tech_df = n_run.links.query("carrier=='battery discharger'")
 
     def remap_bus_column(df, bus_column, suffix=" battery"):
@@ -179,30 +172,22 @@ def attach_stores(n, costs, config):
 
         df_modif.drop(["bus_clean", "bus_real"], axis=1, inplace=True)
 
-        return df_modif      
+        return df_modif
 
     # Capacities dataframes must be re-mapped to account for the changes
     # in the grid topology
     chargers_tech_df_remap = chargers_tech_df.copy()
     chargers_tech_df_remap = remap_bus_column(
-        df=chargers_tech_df,
-        bus_column="bus1",
-        suffix=" battery"
+        df=chargers_tech_df, bus_column="bus1", suffix=" battery"
     )
     chargers_tech_df_remap = remap_bus_column(
-        df=chargers_tech_df_remap,
-        bus_column="bus0",
-        suffix=""
+        df=chargers_tech_df_remap, bus_column="bus0", suffix=""
     )
     chargers_tech_df = chargers_tech_df_remap
 
-
-
     tech_busmap_df = busmap.copy()
-    
-    b_buses_i = n.madd(
-        "Bus", buses_i + " battery", carrier="battery", **bus_sub_dict
-    )
+
+    b_buses_i = n.madd("Bus", buses_i + " battery", carrier="battery", **bus_sub_dict)
 
     n.madd(
         "Store",
@@ -331,9 +316,10 @@ if __name__ == "__main__":
 
         snakemake = mock_snakemake(
             "add_extra_components",
-            #configfile="configs/scenarios/config.co.2050greenp_dispatch_.yaml",
+            # configfile="configs/scenarios/config.co.2050greenp_dispatch_.yaml",
             configfile="configs/scenarios/config.co.2050greenp_dispatch.yaml",
-            simpl="", clusters=10
+            simpl="",
+            clusters=10,
         )
 
     configure_logging(snakemake)

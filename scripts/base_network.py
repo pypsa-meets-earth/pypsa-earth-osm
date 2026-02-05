@@ -616,7 +616,8 @@ if __name__ == "__main__":
         from _helpers import mock_snakemake
 
         snakemake = mock_snakemake(
-            "base_network", configfile="configs/scenarios/configs/scenarios/config.co.2050greenp_dispatch.yaml"
+            "base_network",
+            configfile="configs/scenarios/configs/scenarios/config.co.2050greenp_dispatch.yaml",
         )
 
     configure_logging(snakemake)
