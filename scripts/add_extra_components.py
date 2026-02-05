@@ -332,7 +332,7 @@ if __name__ == "__main__":
         snakemake = mock_snakemake(
             "add_extra_components",
             #configfile="configs/scenarios/config.co.2050greenp_dispatch_.yaml",
-            configfile="configs/scenarios/config.co.2050greenp_dispatch_optstorage.yaml",
+            configfile="configs/scenarios/config.co.2050greenp_dispatch.yaml",
             simpl="", clusters=10
         )
 
