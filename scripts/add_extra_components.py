@@ -160,10 +160,43 @@ def attach_stores(n, costs, config):
     reclustering_busmap = pd.read_csv(
         snakemake.params.recluster_fl
     )
+    recluster_dict = dict(
+        zip(
+            reclustering_busmap["busmap_opim"],
+            reclustering_busmap["busmap_oper"]
+        )
+    )     
 
     batteries_tech_df = n_run.stores.query("carrier=='battery'")  
     chargers_tech_df = n_run.links.query("carrier=='battery charger'") 
     dischargers_tech_df = n_run.links.query("carrier=='battery discharger'")
+
+    def remap_bus_column(df, bus_column, suffix=" battery"):
+        df_modif = df.copy()
+        df_modif["bus_clean"] = df_modif[bus_column].str.replace(suffix, "")
+        df_modif["bus_real"] = df_modif.bus_clean.replace(recluster_dict)
+        df_modif[bus_column] = df_modif["bus_real"] + suffix
+
+        df_modif.drop(["bus_clean", "bus_real"], axis=1, inplace=True)
+
+        return df_modif      
+
+    # Capacities dataframes must be re-mapped to account for the changes
+    # in the grid topology
+    chargers_tech_df_remap = chargers_tech_df.copy()
+    chargers_tech_df_remap = remap_bus_column(
+        df=chargers_tech_df,
+        bus_column="bus1",
+        suffix=" battery"
+    )
+    chargers_tech_df_remap = remap_bus_column(
+        df=chargers_tech_df_remap,
+        bus_column="bus0",
+        suffix=""
+    )
+    chargers_tech_df = chargers_tech_df_remap
+
+
 
     tech_busmap_df = busmap.copy()
     
