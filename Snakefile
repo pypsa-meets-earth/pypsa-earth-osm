@@ -560,6 +560,7 @@ rule add_electricity:
         optimised_network_fl=config["optimised_network_fl"],
         busmap_oper_fl=config["busmap_oper_fl"],
         recluster_fl=config["recluster_fl"],
+        clustered_fl=config["clustered_fl"],
     input:
         **{
             f"profile_{tech}": "resources/"
@@ -584,6 +585,7 @@ rule add_electricity:
         gadm_shapes="resources/" + RDIR + "shapes/gadm_shapes.geojson",
         hydro_capacities="data/hydro_capacities.csv",
         demand_profiles="resources/" + RDIR + "demand_profiles.csv",
+        regions_onshore="resources/" + RDIR + "bus_regions/regions_onshore.geojson",
     output:
         "networks/" + RDIR + "elec.nc",
     log:

@@ -101,6 +101,7 @@ from _helpers import (
     build_currency_conversion_cache,
     configure_logging,
     create_logger,
+    locate_reclustering,
     read_csv_nafix,
     sanitize_carriers,
     sanitize_locations,
@@ -440,6 +441,11 @@ def attach_wind_and_solar(
                 snakemake.params.recluster_fl
             )
 
+            reclust_map = locate_reclustering(
+                clustered_path=snakemake.params.clustered_fl, 
+                orig_buses_path=snakemake.input.regions_onshore,
+            )
+
             if (tech == "solar") | (tech == "onwind"):
                 # TODO The buses must be mapped from `n_run` to `n`
                 # the goal is assigning right time-series of renewable potential
@@ -459,17 +465,17 @@ def attach_wind_and_solar(
 
                 tech_busmap_df["busmap_opt"] = tech_busmap_df["busmap"]
 
-                #recluster_dict = dict(
-                #    zip(
-                #        reclustering_busmap["busmap_opim"],
-                #        reclustering_busmap["busmap_oper"]
-                #    )
-                #)
-                #tech_busmap_df["busmap"] = (
-                #    tech_busmap_df["busmap"]
-                #    .map(recluster_dict)
-                #    .fillna(tech_busmap_df["busmap"])
-                #)
+                recluster_dict = dict(
+                    zip(
+                        reclustering_busmap["busmap_opim"],
+                        reclustering_busmap["busmap_oper"]
+                    )
+                )
+                tech_busmap_df["busmap"] = (
+                    tech_busmap_df["busmap"]
+                    .map(recluster_dict)
+                    .fillna(tech_busmap_df["busmap"])
+                )
 
                 tech_busmap_df["p_nom"] = 0
 

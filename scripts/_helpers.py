@@ -1557,6 +1557,51 @@ def locate_bus(
 
     return df
 
+def locate_reclustering(clustered_path, orig_buses_path):
+    """
+    Utility function to re-cluster buses to a benchmark
+    clustering file
+    """
+    clustered  = gpd.read_file(clustered_path)
+    orig_buses = gpd.read_file(orig_buses_path)
+    
+    # TODO replace CRS hard-coding
+    if clustered.crs is None:
+        clustered = clustered.set_crs("EPSG:4326", allow_override=True)
+    if orig_buses.crs is None:
+        orig_buses = orig_buses.set_crs("EPSG:4326", allow_override=True)
+    
+    # Project polygons to meters FIRST, then compute centroids (avoids geographic centroid issues)
+    clustered_m  = clustered.to_crs(3857)
+    orig_buses_m = orig_buses.to_crs(3857)
+    
+    clustered_m  = clustered_m.assign(geometry=clustered_m.geometry.centroid)
+    orig_buses_m = orig_buses_m.assign(geometry=orig_buses_m.geometry.centroid)
+    
+    clustered_m = clustered_m.copy()
+    clustered_m["cluster_index"] = clustered_m.index
+    
+    # Bring desired columns from clustered onto orig_buses
+    clustered_keep = clustered_m[["cluster_index", "name", "country", "geometry"]].rename(columns={
+        "name": "cluster_name",
+        "country": "elec_country",
+    })
+    
+    matched = gpd.sjoin_nearest(
+        orig_buses_m,
+        clustered_keep,
+        how="left",
+        distance_col="dist_m",
+    )#.drop(columns=["index_right"])
+    
+    
+    #print(type(matched), matched.shape)
+    #print(matched[["shape_id", "name", "cluster_index", "cluster_name", "dist_m"]].head())
+    matched_out = matched.copy()[["shape_id", "name", "cluster_name", "dist_m"]]
+    matched_out.to_csv("reclustering_matched_test.csv", index=False)
+
+    return matched_out    
+
 
 def get_conv_factors(sector):
     # Create a dictionary with all the conversion factors from ktons or m3 to TWh based on https://unstats.un.org/unsd/energy/balance/2014/05.pdf
