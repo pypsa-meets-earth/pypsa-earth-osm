@@ -557,6 +557,10 @@ rule add_electricity:
         alternative_clustering=config["cluster_options"]["alternative_clustering"],
         renewable=config["renewable"],
         length_factor=config["lines"]["length_factor"],
+        optimised_network_fl=config["optimised_network_fl"],
+        busmap_oper_fl=config["busmap_oper_fl"],
+        recluster_fl=config["recluster_fl"],
+        clustered_fl=config["clustered_fl"],
     input:
         **{
             f"profile_{tech}": "resources/"
@@ -581,6 +585,7 @@ rule add_electricity:
         gadm_shapes="resources/" + RDIR + "shapes/gadm_shapes.geojson",
         hydro_capacities="data/hydro_capacities.csv",
         demand_profiles="resources/" + RDIR + "demand_profiles.csv",
+        regions_onshore="resources/" + RDIR + "bus_regions/regions_onshore.geojson",
     output:
         "networks/" + RDIR + "elec.nc",
     log:
@@ -731,6 +736,9 @@ rule augmented_line_connections:
 rule add_extra_components:
     params:
         transmission_efficiency=config["sector"]["transmission_efficiency"],
+        optimised_network_fl=config["optimised_network_fl"],
+        busmap_oper_fl=config["busmap_oper_fl"],
+        recluster_fl=config["recluster_fl"],
     input:
         overrides="data/override_component_attrs",
         network="networks/" + RDIR + "elec_s{simpl}_{clusters}.nc",
