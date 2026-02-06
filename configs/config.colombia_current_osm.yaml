@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText:  PyPSA-Earth and PyPSA-Eur Authors
+#
+# SPDX-License-Identifier: CC0-1.0
+
+
 # base configuration file for Colombia
 countries: ["CO"]
 
@@ -46,5 +51,5 @@ solver_options:
     parallel: "on"
     random_seed: 123
     primal_feasibility_tolerance: 1e-2
-    dual_feasibility_tolerance: 1e-2 
+    dual_feasibility_tolerance: 1e-2
     ipm_optimality_tolerance: 1e-2
