@@ -4,7 +4,7 @@ SPDX-FileCopyrightText:  PyPSA-Earth and PyPSA-Eur Authors
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-# PyPSA-Earth-OSM: enabling synergies between OSM enhansment and energy modelling.
+# PyPSA-Earth-OSM: Colombia Energy System Modeling
 
 <p align="left">
 by
@@ -13,6 +13,7 @@ by
 <a/>
 </p>
 
+> **Note**: This is the **Colombia-specific modeling branch**. For general features and development, see the [`development` branch](https://github.com/pypsa-meets-earth/pypsa-earth-osm/tree/development).
 
 ## Development Status: **In progress**
 
@@ -24,9 +25,19 @@ by
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/pypsa-meets-earth/pypsa-earth-osm/main.svg)](https://results.pre-commit.ci/latest/github/pypsa-meets-earth/pypsa-earth/main)
 [![Discord](https://img.shields.io/discord/911692131440148490?logo=discord)](https://discord.gg/AnuJBk23FU)
 
-That is an experimental modeling implementation intended to be used for bridging OSM mapping work with enhansement of the energy modelling workflow.
+This branch is dedicated to energy system modeling and analysis for **Colombia**. It contains Colombia-specific configurations, data, network models, and analysis workflows built on the PyPSA-Earth-OSM framework.
 
-To run the stable modelling workflow for any country of the workd, please refer to [PyPSA-Earth repository](https://github.com/pypsa-meets-earth/pypsa-earth).
+## About This Branch
+
+The `columbia-modeling` branch focuses on:
+- Colombia-specific power grid topology and validation
+- Country-specific configuration files and parameters
+- Regional energy system analysis and optimization
+- Integration with Colombia's power infrastructure data from OpenStreetMap
+
+For general PyPSA-Earth-OSM features and documentation, refer to the [`development` branch](https://github.com/pypsa-meets-earth/pypsa-earth-osm/tree/development).
+
+To run the stable modelling workflow for any country of the world, please refer to [PyPSA-Earth repository](https://github.com/pypsa-meets-earth/pypsa-earth).
 
 ## How Earth-OSM Works
 
